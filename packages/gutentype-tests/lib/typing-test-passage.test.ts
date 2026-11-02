@@ -1,6 +1,5 @@
 // ISC-73, the passage underneath each Typing Test: a random starting verse that is never an omitted one, a run
 // that crosses chapter and book ends and skips omitted verses, and Keybr's generator contract (mark and reset).
-/* eslint-disable n/no-extraneous-import -- dependency line for @gutentype/typing-test listed for the integrator */
 import { test } from "node:test";
 import { type BookText, loadBook, Pack } from "@gutentype/content";
 import {

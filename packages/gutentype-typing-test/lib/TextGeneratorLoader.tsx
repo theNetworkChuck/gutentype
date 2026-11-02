@@ -9,7 +9,6 @@ import {
   scriptureSettings,
   typingTestBook,
 } from "@gutentype/typing-test/lib/settings.ts";
-// eslint-disable-next-line n/no-extraneous-import -- dependency line listed for the integrator
 import { catchError } from "@keybr/debug";
 import { type TextGenerator } from "@keybr/page-typing-test/lib/generators/types.ts";
 import { SettingsContext, useSettings } from "@keybr/settings";

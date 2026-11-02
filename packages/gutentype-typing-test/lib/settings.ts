@@ -1,5 +1,4 @@
 import { activePack, type Pack } from "@gutentype/content";
-// eslint-disable-next-line n/no-extraneous-import -- dependency line listed for the integrator
 import { Language } from "@keybr/keyboard";
 import {
   TextSourceType,

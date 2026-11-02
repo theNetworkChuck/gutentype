@@ -4,7 +4,6 @@
 // These tests import Gutentype's modules directly: tstest runs plain node, so webpack's module swap (ISC-74) is
 // not in play here. replacements-check.sh proves the built bundle carries the same modules.
 // The DOM this file renders into, set up here so the package test script (server and bundler envs only) runs it too.
-/* eslint-disable n/no-extraneous-import -- dependency lines for @gutentype/typing-test and @keybr/page-typing-test listed for the integrator */
 import "@keybr/test-env-browser";
 import { test } from "node:test";
 import { activePack, gutentypeProps, loadBook, Pack } from "@gutentype/content";
