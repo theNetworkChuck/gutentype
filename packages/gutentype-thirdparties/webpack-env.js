@@ -33,6 +33,8 @@ export { ENV };
  * at its root: `{ "<repo-relative Keybr path>": "<repo-relative Gutentype path>" }`. `replacementPlugins(webpack)`
  * returns one NormalModuleReplacementPlugin per swap; a missing source or target path stops the build, so an
  * upstream rename can never silently drop a replacement.
+ * A swapped-in module resolves its relative imports from the ORIGINAL file's folder, so it imports everything,
+ * its own package's files included, by package path (`@gutentype/<pkg>/lib/...`), never `./`.
  */
 function replacements() {
   const root = resolve(import.meta.dirname, "../..");
