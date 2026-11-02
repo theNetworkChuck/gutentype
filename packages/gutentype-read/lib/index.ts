@@ -3,7 +3,7 @@
  * exported here with its signature; the rest are additions the tests and other lanes may use.
  */
 export { readCopy } from "./copy.ts";
-export { keepVisible, useKeepVisible } from "./keep-visible.ts";
+export { keepVisible, lastTypedChar, useKeepVisible } from "./keep-visible.ts";
 export { NextVerseOffer } from "./pages/NextVerseOffer.tsx";
 export { featuredBookId } from "./pages/parts.tsx";
 export { ReadBookPage } from "./pages/ReadBookPage.tsx";

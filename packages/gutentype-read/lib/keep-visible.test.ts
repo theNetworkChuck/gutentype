@@ -5,7 +5,7 @@
  */
 import { test } from "node:test";
 import { equal } from "rich-assert";
-import { keepVisible } from "./keep-visible.ts";
+import { keepVisible, lastTypedChar } from "./keep-visible.ts";
 
 function box(top: number, height: number): Element {
   return {
@@ -68,4 +68,49 @@ test("no viewport (an old browser) or no element: nothing happens", () => {
     keepVisible(box(500, 100), null, () => {}),
     0,
   );
+});
+
+// Review finding (2026-11-02): a verse taller than the space above the keyboard (Esther 8:9 on a phone) was
+// scrolled back to its top on every keystroke, hiding the line being typed. With the caret known, the caret's
+// line is what stays visible.
+test("a tall verse keeps the caret's line visible, not its top", () => {
+  const scrolled: number[] = [];
+  // Box from 12 to 912 (900 tall); caret line at 600..630, below the 378 visible bottom.
+  const dy = keepVisible(
+    box(12, 900),
+    keyboardOpen,
+    (d) => scrolled.push(d),
+    12,
+    box(600, 30),
+  );
+  equal(dy, 630 - 378);
+  equal(scrolled.length, 1);
+});
+
+test("a tall verse whose caret is already visible does not move", () => {
+  const scrolled: number[] = [];
+  // Box top is far above the screen; the caret line sits at 200..230, inside the visible part.
+  const dy = keepVisible(
+    box(-500, 900),
+    keyboardOpen,
+    (d) => scrolled.push(d),
+    12,
+    box(200, 30),
+  );
+  equal(dy, 0);
+  equal(scrolled.length, 0);
+});
+
+test("lastTypedChar finds the last character carrying Keybr's hit or miss color", () => {
+  const spans = [
+    { style: "color: var(--textinput--hit__color);", id: 1 },
+    { style: "color: var(--textinput--miss__color);", id: 2 },
+    { style: "", id: 3 },
+  ].map(({ style, id }) => ({
+    id,
+    getAttribute: (n: string) => (n === "style" ? style : null),
+  }));
+  const root = { querySelectorAll: () => spans } as unknown as Element;
+  equal((lastTypedChar(root) as unknown as { id: number }).id, 2);
+  equal(lastTypedChar(null), null);
 });

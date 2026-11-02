@@ -24,7 +24,7 @@ import {
 } from "react";
 import { Link, useParams } from "react-router";
 import { readCopy } from "../copy.ts";
-import { keepVisible, useKeepVisible } from "../keep-visible.ts";
+import { keepVisible, lastTypedChar, useKeepVisible } from "../keep-visible.ts";
 import {
   chapterProgress,
   rowsOf,
@@ -224,7 +224,8 @@ export function Chapter({
       );
       start(nextVerse(verses, done, row.verse));
     } else {
-      keepVisible(activeRef.current);
+      const box = activeRef.current;
+      keepVisible(box, undefined, undefined, undefined, lastTypedChar(box));
     }
   };
 

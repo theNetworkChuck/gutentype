@@ -150,7 +150,11 @@ export function clientAddress(ctx: Context): string {
   return ctx.request.req.socket.remoteAddress ?? "";
 }
 
-/** Refuses (429) past 3 links per address or 20 per network address in an hour, else records the attempt. */
+/**
+ * Refuses (429) past 3 links per address or 20 per network address in an hour. The attempt is recorded first and
+ * counted after, so four workers racing on one address can never all pass a count taken before any of them wrote:
+ * a race can only refuse one too many, never let one too many through. Refused attempts stay counted for the hour.
+ */
 export async function checkSignInRate(
   dataDir: DataDir,
   email: string,
@@ -170,19 +174,19 @@ export async function checkSignInRate(
       .count({ n: "*" });
     return Number(n);
   };
-  if (
-    (await count("email_hash", emailHash)) >= linksPerAddressPerHour ||
-    (await count("ip_hash", ipHash)) >= linksPerNetworkPerHour
-  ) {
-    throw new TooManyRequestsError(
-      "Too many sign-in links were asked for. Try again in an hour.",
-    );
-  }
   await knex(signInAttemptTable).insert({
     email_hash: emailHash,
     ip_hash: ipHash,
     created_at: now,
   });
+  if (
+    (await count("email_hash", emailHash)) > linksPerAddressPerHour ||
+    (await count("ip_hash", ipHash)) > linksPerNetworkPerHour
+  ) {
+    throw new TooManyRequestsError(
+      "Too many sign-in links were asked for. Try again in an hour.",
+    );
+  }
 }
 
 /** The email hash a person's sign-in attempts are stored under, so deleting the account deletes them. */

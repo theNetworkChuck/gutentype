@@ -400,6 +400,11 @@ const share: Page = {
           property: "og:description",
           content: `${lines.translation}. ${lines.speed}, ${lines.accuracy}, ${lines.date}.`,
         },
+        // Each card is its own object for social previews: og:url keeps the card's fields (review, 2026-11-02).
+        {
+          property: "og:url",
+          content: `${String(new URL(ctx.request.path, canonicalUrl))}?${card.query}`,
+        },
         { property: "og:image", content: image },
         { property: "og:image:width", content: "1200" },
         { property: "og:image:height", content: "630" },

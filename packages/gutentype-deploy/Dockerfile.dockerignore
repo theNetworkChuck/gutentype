@@ -1,6 +1,8 @@
 **/.env
 **/.env.*
 !.env.example
+# The deploy's secrets file (compose.yaml's env_file) never enters the build context.
+**/env.production
 .git
 .harness
 **/node_modules

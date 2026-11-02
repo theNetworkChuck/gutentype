@@ -20,7 +20,8 @@ while IFS= read -r f; do deploy_files+=("$f"); done < <(
       find . -maxdepth 1 -type f \( -iname 'Dockerfile*' -o -iname '*compose*.y*ml' \) 2>/dev/null; }
 )
 if [ "${#deploy_files[@]}" -gt 0 ]; then
-  if (cd "$GT_ROOT" && grep -nE 'devenv|start-docker|accessToken *= *"xyz"' "${deploy_files[@]}"); then
+  # Commands only: comment lines may explain why the seed path is gone.
+  if (cd "$GT_ROOT" && grep -nE 'devenv|start-docker|accessToken *= *"xyz"' "${deploy_files[@]}" | grep -vE '^[^:]+:[0-9]+:[[:space:]]*(#|//)'); then
     echo "FAIL: a deploy file calls Keybr's devenv initdb or start-docker"
     fail=1
   else

@@ -126,3 +126,26 @@ for (const query of [
 test("the locale variant of /share works too", async () => {
   equal((await get(`/de/share?${card}`)).status, 200);
 });
+
+// Review finding (2026-11-02): with a query-free og:url, platforms that key previews by og:url can show one
+// person's card for another's link. og:url keeps exactly the card's fields, nothing else.
+test("og:url is the card's own URL: the path plus only the card fields", async () => {
+  const other = "pack=kjv&book=jude&wpm=40&acc=0.9&date=2026-11-03";
+  const extra = `${card}&name=Chuck%20Keith`;
+  const urlOf = async (q: string) =>
+    new URL(
+      load(await (await get(`/share?${q}`)).body.text())(
+        'meta[property="og:url"]',
+      ).attr("content")!,
+    );
+  const a = await urlOf(card);
+  const b = await urlOf(other);
+  const c = await urlOf(extra);
+  equal(a.origin + a.pathname, "https://gutentype.app/share");
+  notDeepEqual(a.search, b.search);
+  deepEqual(
+    Object.fromEntries(a.searchParams),
+    Object.fromEntries(new URLSearchParams(card)),
+  );
+  deepEqual(a.search, c.search);
+});

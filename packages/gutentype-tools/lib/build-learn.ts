@@ -15,7 +15,7 @@
  * order, six letters at the earliest, as Keybr's guided lessons start); every fragment of the early, thin stages is
  * kept and later stages are sampled down to a fixed cap so the chunk stays small.
  */
-import { readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { blocklist, divineNames } from "./learn-blocklist.ts";
 
@@ -194,7 +194,10 @@ if (import.meta.main) {
     "../../gutentype-content/lib/packs",
   );
   const summary: Record<string, unknown> = {};
-  for (const id of readdirSync(packsDir).sort()) {
+  // Only directories that hold a pack.json are packs (the folder also holds a .gitattributes).
+  for (const id of readdirSync(packsDir)
+    .filter((id) => existsSync(join(packsDir, id, "pack.json")))
+    .sort()) {
     summary[id] = buildPackDir(join(packsDir, id));
   }
   console.log(JSON.stringify(summary, null, 1));

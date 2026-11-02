@@ -84,3 +84,19 @@ test("attempts are stored only as salted hashes and pruned after an hour", async
   equal(await ask("hashme@example.com", "203.0.113.9"), 200);
   equal((await knex("gutentype_sign_in_attempt")).length, 4);
 });
+
+// Review finding (2026-11-02): counting before recording let requests racing across the four worker processes all
+// pass the count; signin.ts now records first and counts after. One process runs its sqlite queries one at a time, so
+// this test cannot reproduce the cross-process race (the old code passed it too); it guards the limit under load.
+test("eight concurrent requests for one address send at most 3 links", async () => {
+  context.mailer.dump(); // dump() empties the outbox
+  const statuses = await Promise.all(
+    Array.from({ length: 8 }, (_, i) =>
+      ask("race@example.com", `198.51.100.${150 + i}`),
+    ),
+  );
+  const sent = context.mailer.dump().length;
+  ok(sent <= 3, `${sent} links went out`);
+  equal(statuses.filter((s) => s === 200).length, sent);
+  ok(statuses.every((s) => s === 200 || s === 429));
+});
