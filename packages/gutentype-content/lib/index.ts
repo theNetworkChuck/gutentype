@@ -3,3 +3,4 @@ export * from "./links.ts";
 export * from "./pack.ts";
 export * from "./settings.ts";
 export * from "./copy.ts";
+export * from "./pagecopy.ts";

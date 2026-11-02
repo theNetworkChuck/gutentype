@@ -227,7 +227,7 @@ function writeGenerated(contentLib: string, ids: string[]) {
 }
 
 if (import.meta.main) {
-  const sourcesDir = resolve(process.argv[2] ?? ".harness/sources");
+  const sourcesDir = resolve(process.argv[2] ?? join(dirname(new URL(import.meta.url).pathname), "../sources"));
   const contentLib = resolve(dirname(new URL(import.meta.url).pathname), "../../gutentype-content/lib");
   const summary = build(sourcesDir, join(contentLib, "packs"));
   writeGenerated(contentLib, SOURCES.map((s) => s.id));
