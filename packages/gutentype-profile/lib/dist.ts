@@ -13,6 +13,14 @@ import { type Distribution } from "@keybr/math";
  * the caller's fix, rather than draw a made-up one.
  */
 
+/** ISC-74: the bundle check finds this marker in the build; it is used below, so minification keeps it. */
+const replacementMarker = "GutentypeComparisonDist";
+/**
+ * Every caller of this module is swapped too, so the build may drop it; replacements-check.sh then requires that
+ * Keybr's shipped speed distribution (a run from `dist_speed.json`) is absent from the bundle instead.
+ */
+// replacementAbsent = "3,3,3,3,4,4,4,5,26,33,34,36,37,38"
+
 function ready(
   name: string,
 ): Extract<
@@ -25,7 +33,7 @@ function ready(
   }
   void loadComparison();
   throw new Error(
-    `${name}: Gutentype has no speed and accuracy comparison loaded ` +
+    `${replacementMarker} ${name}: Gutentype has no speed and accuracy comparison loaded ` +
       `(${comparison?.kind ?? "not loaded"}); read it with useComparison() from @gutentype/profile`,
   );
 }

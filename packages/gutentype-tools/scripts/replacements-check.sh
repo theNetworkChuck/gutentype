@@ -83,8 +83,13 @@ fi
 for entry in "${markers[@]+"${markers[@]}"}"; do
   marker="${entry%%|*}"
   to="${entry#*|}"
+  absent="$(sed -nE 's/.*replacementAbsent[[:space:]]*=[[:space:]]*"([^"]+)".*/\1/p' "$to" | head -n 1)"
   if grep -lF --include='*.js' -r "$marker" "$assets" >/dev/null; then
     echo "bundle: $marker found ($to)"
+  elif [[ -n "$absent" ]] && ! grep -lF --include='*.js' -r "$absent" "$assets" >/dev/null; then
+    # A swap whose every caller is itself swapped is dropped from the bundle; it then passes only if the
+    # original module's own content (its replacementAbsent string) is gone too.
+    echo "bundle: $marker unreferenced and the original is absent ($to)"
   else
     fail "the bundle in $assets lacks marker $marker from $to"
   fi

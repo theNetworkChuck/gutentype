@@ -14,3 +14,6 @@ export function AccuracyHistogramSection({
 }): ReactNode {
   return <AccuracyComparison stats={stats} comparison={useComparison()} />;
 }
+
+// ISC-74: the bundle check finds this marker in the build, proving the swap.
+AccuracyHistogramSection.displayName = "GutentypeAccuracyHistogramSection";
