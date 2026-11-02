@@ -1,3 +1,9 @@
+import {
+  GutentypeAccountPage,
+  GutentypeHome,
+  gutentypeRoutes,
+  // eslint-disable-next-line n/no-extraneous-import -- the "@gutentype/pages" dependency line is the integrator's (CONTRACTS)
+} from "@gutentype/pages";
 import { ErrorHandler } from "@keybr/debug";
 import {
   getPageData,
@@ -21,12 +27,12 @@ export function main() {
   createRoot(querySelector(Root.selector)).render(<App />);
 }
 
-const AccountPage = lazy(() => import("./pages/account.tsx"));
+const AccountPage = GutentypeAccountPage; // Gutentype: no Keybr checkout in the bundle.
 const HelpPage = lazy(() => import("./pages/help.tsx"));
 const HighScorePage = lazy(() => import("./pages/high-scores.tsx"));
 const LayoutsPage = lazy(() => import("./pages/layouts.tsx"));
 const MultiplayerPage = lazy(() => import("./pages/multiplayer.tsx"));
-const PracticePage = lazy(() => import("./pages/practice.tsx"));
+const PracticePage = GutentypeHome; // Gutentype: the homepage wraps Keybr's practice.
 const ProfilePage = lazy(() => import("./pages/profile.tsx"));
 const TypingTestPage = lazy(() => import("./pages/typing-test.tsx"));
 const TermsOfServicePage = lazy(() => import("./pages/terms-of-service.tsx"));
@@ -53,6 +59,7 @@ function PageRoutes() {
   return (
     <BrowserRouter basename={Pages.intlBase(locale)}>
       <Routes>
+        {gutentypeRoutes(Template, Title)}
         <Route
           index={true}
           path={Pages.practice.path}
