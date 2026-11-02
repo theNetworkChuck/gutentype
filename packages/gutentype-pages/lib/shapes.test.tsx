@@ -59,7 +59,9 @@ function charSpan(attrs: number): Element {
   const span = [...host.querySelectorAll("span[style]")].find(
     (s) => s.textContent === "a" && /textinput/.test(s.getAttribute("style")!),
   );
-  isNotNull(span);
+  if (span == null) {
+    throw new Error("Keybr rendered no character span");
+  }
   return span;
 }
 
