@@ -2,7 +2,7 @@
 
 import { join } from "node:path";
 import { intlTransformer } from "@keybr/scripts/intl-transformer.js";
-import { ENV } from "@keybr/thirdparties/webpack-env.js";
+import { ENV, replacementPlugins } from "@keybr/thirdparties/webpack-env.js";
 import CompressionPlugin from "compression-webpack-plugin";
 import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
@@ -147,6 +147,7 @@ export default [
     },
     devtool: "source-map",
     plugins: [
+      ...replacementPlugins(webpack), // Gutentype: Keybr modules swapped at bundle time (ISC-74).
       new webpack.DefinePlugin({
         ...ENV,
         "typeof window": JSON.stringify("undefined"),
@@ -211,6 +212,7 @@ export default [
     },
     devtool: "source-map",
     plugins: [
+      ...replacementPlugins(webpack), // Gutentype: Keybr modules swapped at bundle time (ISC-74).
       new webpack.DefinePlugin({
         ...ENV,
         "typeof window": JSON.stringify("object"),

@@ -4,7 +4,7 @@
   "modified": [
     {
       "path": "webpack.config.js",
-      "reason": "Drops Keybr's ads bundle entry."
+      "reason": "Drops Keybr's ads bundle entry; applies the Gutentype module swaps declared in packages/gutentype-*/keybr-replacements.json (one import, one line per bundle)."
     },
     {
       "path": "packages/keybr-pages-server/lib/Shell.tsx",

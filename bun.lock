@@ -153,6 +153,21 @@
         "@keybr/textinput-ui": "*",
       },
     },
+    "packages/gutentype-profile": {
+      "name": "@gutentype/profile",
+      "version": "0.0.0",
+      "dependencies": {
+        "@gutentype/content": "*",
+        "@keybr/chart": "*",
+        "@keybr/intl": "*",
+        "@keybr/math": "*",
+        "@keybr/page-profile": "*",
+        "@keybr/request": "*",
+        "@keybr/result": "*",
+        "@keybr/settings": "*",
+        "@keybr/widget": "*",
+      },
+    },
     "packages/gutentype-read": {
       "name": "@gutentype/read",
       "version": "0.0.0",
@@ -241,6 +256,21 @@
         "@keybr/result": "*",
         "@keybr/settings": "*",
         "@keybr/textinput": "*",
+      },
+    },
+    "packages/gutentype-typing-test": {
+      "name": "@gutentype/typing-test",
+      "version": "0.0.0",
+      "dependencies": {
+        "@gutentype/content": "*",
+        "@keybr/content": "*",
+        "@keybr/intl": "*",
+        "@keybr/lang": "*",
+        "@keybr/page-typing-test": "*",
+        "@keybr/rand": "*",
+        "@keybr/settings": "*",
+        "@keybr/textinput": "*",
+        "@keybr/widget": "*",
       },
     },
     "packages/keybr-assets": {
@@ -1158,6 +1188,8 @@
 
     "@gutentype/pages": ["@gutentype/pages@workspace:packages/gutentype-pages"],
 
+    "@gutentype/profile": ["@gutentype/profile@workspace:packages/gutentype-profile"],
+
     "@gutentype/read": ["@gutentype/read@workspace:packages/gutentype-read"],
 
     "@gutentype/server": ["@gutentype/server@workspace:packages/gutentype-server"],
@@ -1165,6 +1197,8 @@
     "@gutentype/tests": ["@gutentype/tests@workspace:packages/gutentype-tests"],
 
     "@gutentype/tools": ["@gutentype/tools@workspace:packages/gutentype-tools"],
+
+    "@gutentype/typing-test": ["@gutentype/typing-test@workspace:packages/gutentype-typing-test"],
 
     "@humanfs/core": ["@humanfs/core@0.19.2", "", { "dependencies": { "@humanfs/types": "^0.15.0" } }, "sha512-UhXNm+CFMWcbChXywFwkmhqjs3PRCmcSa/hfBgLIb7oQ5HNb1wS0icWsGtSAUNgefHeI+eBrA8I1fxmbHsGdvA=="],
 

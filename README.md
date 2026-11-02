@@ -37,7 +37,7 @@ Gutentype changes 14 of Keybr's own source files (this README included; the budg
 | File | Why |
 |---|---|
 | `README.md` | This file. |
-| `webpack.config.js` | Drops Keybr's ads bundle entry. |
+| `webpack.config.js` | Drops Keybr's ads bundle entry; applies the Gutentype module swaps declared in packages/gutentype-*/keybr-replacements.json (one import, one line per bundle). |
 | `packages/keybr-pages-server/lib/Shell.tsx` | No third-party scripts; version meta; Gutentype title and metas; optional server-rendered body; plain-text label and footer. |
 | `packages/server/lib/app/routes.ts` | Drops Keybr's checkout; runs the Gutentype route gate and registers the Gutentype controllers. |
 | `packages/keybr-lesson-loader/lib/LessonLoader.tsx` | Learn builds the scripture lesson (ScriptureLesson on the active pack) and maps a saved non-scripture lesson type back to guided. |
