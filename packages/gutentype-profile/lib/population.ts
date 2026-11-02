@@ -11,8 +11,10 @@ import { Distribution } from "@keybr/math";
 
 /*
  * ISC-75: the people Profile compares a person against are Gutentype's own, read from the server's 90-day totals
- * of the anonymous speed-and-accuracy counts (`GET /_/gutentype/population`). This module has no React and does
- * not import `@keybr/chart`, because it also backs the swapped `@keybr/chart` distribution module (`dist.ts`).
+ * of the anonymous speed-and-accuracy counts (`GET /_/gutentype/population`). Keybr's `makeSpeedDistribution` and
+ * `makeAccuracyDistribution` (`@keybr/chart`, built from keybr.com's shipped `dist_speed.json`/`dist_accuracy.json`)
+ * have no caller left once Profile's sections and the Typing Test report are swapped, so the bundler drops them and
+ * their data; profile-dist.test.ts checks the built bundle for that.
  */
 
 export { populationPath };

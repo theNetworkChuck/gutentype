@@ -15,5 +15,5 @@ export function SpeedHistogramSection({
   return <SpeedComparison stats={stats} comparison={useComparison()} />;
 }
 
-// ISC-74: the bundle check finds this marker in the build, proving the swap.
+// ISC-74 marker: replacements-check.sh finds it in the built bundle.
 SpeedHistogramSection.displayName = "GutentypeSpeedHistogramSection";

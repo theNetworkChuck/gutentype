@@ -5,6 +5,8 @@
  * "not enough data yet". Keybr's shipped distribution is never used.
  */
 import { deepEqual, equal, ok } from "node:assert/strict";
+import { readdirSync, readFileSync } from "node:fs";
+import { join, resolve } from "node:path";
 import { test } from "node:test";
 import { Application } from "@fastr/core";
 import {
@@ -238,4 +240,46 @@ test("with 100+ lessons the percentile comes from Gutentype's histogram", () => 
   );
   // The rendered line ("faster than 40% of the 100 Learn lessons") is checked in a browser environment by
   // packages/gutentype-profile/lib/Comparison.test.tsx, because Keybr's charts need a DOM canvas.
+});
+
+test("the built browser bundle carries Gutentype's comparison and none of Keybr's shipped distribution", () => {
+  const root = resolve(import.meta.dirname, "../../..");
+  const assets = join(root, "root/public/assets");
+  const scripts = readdirSync(assets)
+    .filter((name) => name.endsWith(".js"))
+    .map((name) => readFileSync(join(assets, name), "utf8"));
+  ok(scripts.length > 0, "no built scripts: run `bun run build` first");
+
+  // A build from before this lane would pass the absence check for the wrong reason; require this lane's code.
+  ok(
+    scripts.some((s) => s.includes(populationPath)),
+    "the bundle does not fetch Gutentype's population: rebuild",
+  );
+  for (const marker of [
+    "GutentypeSpeedHistogramSection",
+    "GutentypeAccuracyHistogramSection",
+    "GutentypeReportScreen",
+  ]) {
+    ok(
+      scripts.some((s) => s.includes(marker)),
+      `${marker} is not in the bundle`,
+    );
+  }
+
+  // Runs of keybr.com's numbers, read from Keybr's own files, as webpack would print them.
+  const dist = (file: string): number[] =>
+    JSON.parse(
+      readFileSync(join(root, "packages/keybr-chart/lib/dist", file), "utf8"),
+    );
+  const probes = [
+    dist("dist_speed.json").slice(300, 306).join(","),
+    dist("dist_accuracy.json").slice(950, 955).join(","),
+  ];
+  for (const probe of probes) {
+    ok(/[1-9]/.test(probe), `probe ${probe} is all zeros`);
+    ok(
+      !scripts.some((s) => s.includes(probe)),
+      `Keybr's distribution data (${probe}) is in the bundle`,
+    );
+  }
 });
