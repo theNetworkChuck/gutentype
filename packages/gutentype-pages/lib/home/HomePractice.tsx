@@ -1,3 +1,5 @@
+// eslint-disable-next-line n/no-extraneous-import -- deps_needed: "@gutentype/profile" in gutentype-pages
+import { LessonSpeedCounter } from "@gutentype/profile/lib/LessonSpeedCounter.tsx";
 import { NextVerseOffer } from "@gutentype/read";
 import { PracticePage } from "@keybr/page-practice";
 import { ResultLoader } from "@keybr/result-loader";
@@ -9,6 +11,7 @@ export default function HomePractice() {
   return (
     <ResultLoader>
       <LessonTenCounter />
+      <LessonSpeedCounter />
       <PracticePage />
       <div className={styles.offer}>
         <NextVerseOffer />

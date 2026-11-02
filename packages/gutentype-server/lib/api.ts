@@ -2,8 +2,10 @@ import { type Context, type Middleware } from "@fastr/core";
 import { ForbiddenError } from "@fastr/errors";
 import { expectJson, type JsonBodyState } from "@fastr/middleware-body";
 import { type RouteOptions, type RouterState } from "@fastr/middleware-router";
+import { populationPath } from "@gutentype/content";
 import { type User } from "@keybr/database";
-import { bumpCounter } from "./counter.ts";
+import { Logger } from "@keybr/logger";
+import { bumpCounter, lessonPopulation } from "./counter.ts";
 import {
   loadReadProgress,
   parsePackId,
@@ -58,6 +60,22 @@ const count: Middleware<RouterState> = async (ctx) => {
   ctx.response.headers.set("Cache-Control", "no-store");
 };
 
+/**
+ * `GET /_/gutentype/population`: everyone's Learn lessons of the last 90 days as two histograms (ISC-75), the same
+ * for every visitor, so it sets no cookie and caches publicly for ten minutes. A database failure is answered 503
+ * here, not thrown, because Keybr's error handler would log the request's headers and address.
+ */
+const population: Middleware<RouterState> = async (ctx) => {
+  try {
+    ctx.response.body = await lessonPopulation();
+    ctx.response.headers.set("Cache-Control", "public, max-age=600");
+  } catch (err: any) {
+    Logger.warn("Population not read: %s", String(err?.code ?? "error"));
+    ctx.response.status = 503;
+    ctx.response.headers.set("Cache-Control", "no-store");
+  }
+};
+
 const countEmpty: Middleware<RouterState> = async (ctx) => {
   ctx.response.status = 204;
   ctx.response.headers.set("Cache-Control", "no-store");
@@ -75,6 +93,7 @@ export function apiRoutes(): RouteOptions[] {
         putRead as any,
       ],
     },
+    { path: populationPath, method: "GET", middleware: population as any },
     { path: "/_/count/{name}", method: "POST", middleware: count as any },
     { path: "/_/count", method: "POST", middleware: countEmpty as any },
     { path: "/_/count/", method: "POST", middleware: countEmpty as any },

@@ -21,7 +21,9 @@ export const privacyCopy: {
       paragraphs: [
         "Nothing about you is stored on our server, apart from the error log described below. Your lesson results, your settings and the verses you have typed stay in this browser (local storage and IndexedDB) until you clear them.",
         "A cookie named prefs remembers your color theme. It holds no identifier.",
-        "When you finish a book, and when you pass your tenth Learn lesson, the browser sends one anonymous count to our server. The request carries only the counter's name: no cookie, no id, nothing else. We keep a daily total per counter and do not record the address it came from. These two totals are the only thing that leaves a signed-out browser.",
+        "When you finish a book, and when you pass your tenth Learn lesson, the browser sends one anonymous count to our server.",
+        "After each Learn lesson, signed in or not, the browser also sends one anonymous count of that lesson's speed and accuracy, rounded down to the nearest 5 words per minute and the nearest whole percent (for example, 40 wpm and 96%). The Profile page compares your speed and accuracy with these counts from the last 90 days.",
+        "Each of these requests carries only the counter's name: no cookie, no id, not the text you typed, nothing else. We keep a daily total per counter and do not record the address it came from. The daily totals are kept with no end date; with no id and no address in them, they cannot be traced back to you. These counts are the only thing that leaves a signed-out browser.",
       ],
     },
     {
