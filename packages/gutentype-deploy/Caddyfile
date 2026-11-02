@@ -1,0 +1,15 @@
+# Gutentype's front door on the VPS. Only Cloudflare reaches ports 80 and 443 (the Hostinger firewall allows
+# Cloudflare's ranges only), so the client address comes from CF-Connecting-IP, which reverse_proxy passes through.
+# The certificate is Let's Encrypt over HTTP-01; Cloudflare forwards the challenge to port 80.
+{
+	email chuck@networkchuck.com
+}
+
+www.gutentype.app {
+	redir https://gutentype.app{uri} permanent
+}
+
+gutentype.app {
+	encode zstd gzip
+	reverse_proxy gutentype:3000
+}

@@ -25,5 +25,25 @@ services:
       options:
         max-size: 10m
         max-file: "3"
+  # HTTPS in front of the app (Caddyfile beside this file).
+  caddy:
+    image: caddy:2.10-alpine
+    depends_on:
+      - gutentype
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
 volumes:
   gutentype-data:
+  caddy-data:
+  caddy-config:
