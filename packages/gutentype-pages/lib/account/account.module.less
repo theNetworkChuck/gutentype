@@ -1,0 +1,100 @@
+.page {
+  max-inline-size: 36rem;
+  padding-inline: 1rem;
+  padding-block: 1.5rem;
+  line-height: 1.5;
+}
+
+.title {
+  margin-block: 0 1rem;
+  font-size: 1.75rem;
+}
+
+.heading {
+  margin-block: 2rem 0.5rem;
+  font-size: 1.25rem;
+}
+
+.form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+  align-items: center;
+}
+
+.label {
+  flex: 0 0 100%;
+  font-weight: bold;
+}
+
+.input {
+  min-inline-size: 12rem;
+  padding-inline: 0.5rem;
+  padding-block: 0.4rem;
+  border: 1px solid currentcolor;
+  border-radius: 0.25rem;
+  color: var(--text-color);
+  background-color: transparent;
+  font-size: 1rem;
+
+  &[aria-invalid="true"] {
+    border-width: 2px;
+    border-style: dashed;
+  }
+}
+
+.action,
+.danger {
+  display: inline-block;
+  padding-inline: 1rem;
+  padding-block: 0.45rem;
+  border: 2px solid currentcolor;
+  border-radius: 0.4rem;
+  color: var(--text-color);
+  background-color: transparent;
+  font-size: 1rem;
+  font-weight: bold;
+  text-decoration: none;
+  cursor: pointer;
+
+  &:disabled {
+    border-style: dashed;
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.danger {
+  border-width: 4px;
+  border-style: double;
+}
+
+.consent {
+  padding-inline: 0.75rem;
+  padding-block: 0.5rem;
+  border-inline-start: 4px solid currentcolor;
+}
+
+.check {
+  font-weight: bold;
+}
+
+.door {
+  margin-block: 1.25rem;
+}
+
+.error {
+  flex: 0 0 100%;
+  margin: 0;
+  font-weight: bold;
+
+  &::before {
+    content: "Error: ";
+  }
+}
+
+.note {
+  flex: 0 0 100%;
+  margin: 0;
+  font-size: 0.875rem;
+}

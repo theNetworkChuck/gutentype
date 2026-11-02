@@ -1,0 +1,95 @@
+.nav {
+  display: flex;
+  position: sticky;
+  inset-block-start: 0;
+  flex-direction: column;
+  gap: 0.75rem;
+  inline-size: 10rem;
+}
+
+.brand {
+  color: var(--text-color);
+  font-size: 1.25rem;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.link {
+  display: block;
+  padding-inline: 0.75rem;
+  padding-block: 0.4rem;
+  border-inline-start: 3px solid transparent;
+  color: var(--text-color);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  /* The current page: a bar, bold and underlined, so it reads without color (ISC-5). */
+  &[aria-current="page"] {
+    border-inline-start-color: currentcolor;
+    font-weight: bold;
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+  }
+}
+
+.extra {
+  padding-inline: 0.75rem;
+}
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  align-items: center;
+  padding-inline: 1rem;
+  padding-block: 1rem;
+  border-block-start: var(--separator-border);
+  font-size: 0.875rem;
+}
+
+.translation {
+  font-weight: bold;
+}
+
+.footerLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+@media (max-width: 40rem) {
+  .nav {
+    position: static;
+    flex-flow: row wrap;
+    align-items: center;
+    inline-size: auto;
+  }
+
+  .list {
+    flex-flow: row wrap;
+  }
+
+  .link {
+    padding-inline: 0.5rem;
+    border-inline-start: none;
+    border-block-end: 3px solid transparent;
+
+    &[aria-current="page"] {
+      border-block-end-color: currentcolor;
+    }
+  }
+}

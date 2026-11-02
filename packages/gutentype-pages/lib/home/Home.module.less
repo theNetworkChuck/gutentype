@@ -1,0 +1,39 @@
+.home {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.intro {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+  align-items: center;
+  padding-inline: 1rem;
+  padding-block: 1.5rem 0.5rem;
+}
+
+.line {
+  flex: 1 1 24rem;
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: normal;
+  line-height: 1.4;
+}
+
+.start {
+  padding-inline: 1.25rem;
+  padding-block: 0.6rem;
+  border: 2px solid currentcolor;
+  border-radius: 0.4rem;
+  color: var(--text-color);
+  background-color: var(--primary-l1);
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    text-decoration: underline;
+  }
+}
