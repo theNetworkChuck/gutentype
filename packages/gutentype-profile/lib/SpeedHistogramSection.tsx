@@ -14,3 +14,6 @@ export function SpeedHistogramSection({
 }): ReactNode {
   return <SpeedComparison stats={stats} comparison={useComparison()} />;
 }
+
+// ISC-74 marker: replacements-check.sh finds it in the built bundle.
+SpeedHistogramSection.displayName = "GutentypeSpeedHistogramSection";

@@ -252,3 +252,6 @@ function Separator() {
 function top(value: number) {
   return Math.max(0, 1 - value); // Takes care of negative zero.
 }
+
+// ISC-74 marker: replacements-check.sh finds it in the built bundle.
+ReportScreen.displayName = "GutentypeReportScreen";

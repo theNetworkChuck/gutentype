@@ -1,5 +1,4 @@
 {
-  "packages/keybr-chart/lib/dist/dist.ts": "packages/gutentype-profile/lib/dist.ts",
   "packages/page-profile/lib/profile/AccuracyHistogramSection.tsx": "packages/gutentype-profile/lib/AccuracyHistogramSection.tsx",
   "packages/page-profile/lib/profile/SpeedHistogramSection.tsx": "packages/gutentype-profile/lib/SpeedHistogramSection.tsx",
   "packages/page-typing-test/lib/components/ReportScreen.tsx": "packages/gutentype-profile/lib/ReportScreen.tsx"

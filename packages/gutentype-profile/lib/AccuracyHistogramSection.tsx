@@ -14,3 +14,6 @@ export function AccuracyHistogramSection({
 }): ReactNode {
   return <AccuracyComparison stats={stats} comparison={useComparison()} />;
 }
+
+// ISC-74 marker: replacements-check.sh finds it in the built bundle.
+AccuracyHistogramSection.displayName = "GutentypeAccuracyHistogramSection";
