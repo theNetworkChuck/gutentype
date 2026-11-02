@@ -55,7 +55,9 @@ export class Controller {
     const state = randomString(20);
     ctx.state.session.start();
     ctx.state.session.set("authState", state);
-    if (answers != null) ctx.state.session.set("gutentypeAdult", true); // Gutentype
+    // Gutentype: the adult flag belongs to this attempt only; a bare start clears an abandoned one.
+    if (answers != null) ctx.state.session.set("gutentypeAdult", true);
+    else ctx.state.session.pull("gutentypeAdult");
     ctx.response.redirect(adapter.getAuthorizationUrl({ state }));
   }
 
@@ -71,7 +73,12 @@ export class Controller {
     ctx.state.session.destroy();
     if (state === authState) {
       const token = await adapter.getAccessToken({ code });
-      const resourceOwner = await adapter.getProfile(token);
+      const profile = await adapter.getProfile(token);
+      // Gutentype: one address, one account, whatever casing the provider sends (the link lowercases too).
+      const resourceOwner =
+        profile.email != null
+          ? { ...profile, email: gt.normalizeEmail(profile.email) }
+          : profile;
       if (resourceOwner.email != null) {
         // Gutentype (ISC-57): no new account without the birth year and consent answered at oauth-init.
         if (!adult && (await User.findByEmail(resourceOwner.email)) == null) {
@@ -124,6 +131,7 @@ export class Controller {
     ctx: Context<RouterState & SessionState & AuthState>,
     @pathParam("token", zod(z.string().min(1))) token: string,
   ) {
+    gt.assertSameOrigin(ctx, this.canonicalUrl); // Gutentype: login CSRF guard.
     ctx.state.session.destroy();
     const user = await gt.consumeLoginToken(token);
     if (user != null) {

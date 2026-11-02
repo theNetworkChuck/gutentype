@@ -29,6 +29,8 @@ import {
 const context = new TestContext();
 
 const email = "young@example.com";
+/** What the fake Google profile returns; a test may change it. */
+let profileEmail = email;
 
 class FakeAdapter extends AbstractAdapter {
   constructor(clientConfig: ClientConfig) {
@@ -52,7 +54,7 @@ class FakeAdapter extends AbstractAdapter {
       raw: {},
       provider: "fake",
       id: "123",
-      email,
+      email: profileEmail,
       name: null,
       url: null,
       imageUrl: null,
@@ -65,6 +67,7 @@ class FakeAdapter extends AbstractAdapter {
 }
 
 test.beforeEach(() => {
+  profileEmail = email;
   class FakeAuthModule implements Module {
     configure(binder: Binder) {}
 
@@ -175,4 +178,33 @@ test("/privacy says under-13s keep typing without an account", () => {
   const text = privacyCopy.sections.flatMap((s) => s.paragraphs).join(" ");
   match(text, /13/);
   match(text, /without an account/);
+});
+
+// Fable check (2026-11-02): the adult flag must not outlive the attempt that set it. On a shared browser an adult
+// answers and abandons Google sign-in; a child then opens a bare oauth-init. No account may be created.
+test("an abandoned adult Google start does not carry over to a later bare start", async () => {
+  const request = startApp(context.get(Application, kMain));
+  const first = await request
+    .GET(`/auth/oauth-init/fake?birthYear=${bornYearsAgo(30)}&consent=true`)
+    .send();
+  equal(first.status, 302);
+  const init = await request.GET("/auth/oauth-init/fake").send();
+  const state = new URL(init.headers.get("Location")!).searchParams.get(
+    "state",
+  )!;
+  const callback = await request
+    .GET(`/auth/oauth-callback/fake?code=xyz&state=${state}`)
+    .send();
+  equal(callback.status, 403);
+  equal(await User.findByEmail(email), null);
+});
+
+// Fable check (2026-11-02): the emailed link lowercases the address; Google may not. One person, one account.
+test("a mixed-case Google email signs in to the existing lowercase account", async () => {
+  await User.query().insert({ email: "mixed@example.com", name: "mixed" });
+  profileEmail = "Mixed@Example.COM";
+  const { request, callback } = await oauthRoundTrip("");
+  equal(callback.status, 302);
+  equal(await request.who(), "mixed@example.com");
+  equal((await User.query().where("email", "like", "%mixed%")).length, 1);
 });

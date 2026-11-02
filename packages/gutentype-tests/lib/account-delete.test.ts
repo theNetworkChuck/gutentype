@@ -152,7 +152,10 @@ test("deleting an account leaves no row and no file for that person", async () =
   for (const file of files) {
     const text = await readFile(file, "utf8");
     if (file.includes(`${dataDir.dataPath("sessions")}`)) {
-      ok(!/"userId":\s*1\b/.test(text), `session still names user 1: ${file}`);
+      ok(
+        !new RegExp(`"userId":\\s*${me.id}\\b`).test(text),
+        `session still names user ${me.id}: ${file}`,
+      );
     }
   }
   const scores = JSON.parse(await readFile(highScores, "utf8"));

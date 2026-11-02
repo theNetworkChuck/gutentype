@@ -71,13 +71,19 @@ test("the POST signs in once; the same link then returns an error", async () => 
   const token = await requestLink("reader@example.com");
   const request = startApp(context.get(Application, kMain));
 
-  const first = await request.POST(`/login/${token}`).send();
+  const first = await request
+    .POST(`/login/${token}`)
+    .header("Sec-Fetch-Site", "same-origin")
+    .send();
   equal(first.status, 303);
   equal(first.headers.get("Location"), "/account");
   equal(await request.who(), "reader@example.com");
 
   const other = startApp(context.get(Application, kMain));
-  const second = await other.POST(`/login/${token}`).send();
+  const second = await other
+    .POST(`/login/${token}`)
+    .header("Sec-Fetch-Site", "same-origin")
+    .send();
   equal(second.status, 403);
   equal(await other.who(), null);
   deepEqual(await UserLoginRequest.query(), []);
@@ -91,7 +97,10 @@ test("a 16-minute-old link returns an error, not a session", async () => {
   });
   const request = startApp(context.get(Application, kMain));
 
-  const response = await request.POST(`/login/${token}`).send();
+  const response = await request
+    .POST(`/login/${token}`)
+    .header("Sec-Fetch-Site", "same-origin")
+    .send();
 
   equal(response.status, 403);
   equal(await request.who(), null);
@@ -105,7 +114,10 @@ test("a 14-minute-old link still works", async () => {
   });
   const request = startApp(context.get(Application, kMain));
 
-  const response = await request.POST(`/login/${token}`).send();
+  const response = await request
+    .POST(`/login/${token}`)
+    .header("Sec-Fetch-Site", "same-origin")
+    .send();
 
   equal(response.status, 303);
   equal(await request.who(), "reader@example.com");
@@ -117,3 +129,33 @@ test("a made-up token returns an error", async () => {
   equal((await request.POST(`/login/${"a".repeat(32)}`).send()).status, 403);
   equal(await request.who(), null);
 });
+
+// Fable check (2026-11-02): a login CSRF. Another site auto-posting the attacker's own link would sign a visitor
+// into the attacker's account, and the visitor's reading progress would then sync into it. The confirm POST is
+// accepted only from this site, and a refused POST leaves the link unused.
+for (const [name, headers] of [
+  [
+    "a cross-site POST",
+    { "Sec-Fetch-Site": "cross-site", "Origin": "https://evil.example" },
+  ],
+  ["a POST whose Origin is another site", { Origin: "https://evil.example" }],
+  ["a POST with neither Origin nor Sec-Fetch-Site", {}],
+] as const) {
+  test(`${name} is refused and the link still works`, async () => {
+    const token = await requestLink("reader@example.com");
+    const attacker = startApp(context.get(Application, kMain));
+    let call = attacker.POST(`/login/${token}`);
+    for (const [k, v] of Object.entries(headers)) call = call.header(k, v);
+    const refused = await call.send();
+    equal(refused.status, 403);
+    equal(await attacker.who(), null);
+
+    const reader = startApp(context.get(Application, kMain));
+    const ok = await reader
+      .POST(`/login/${token}`)
+      .header("Origin", "https://gutentype.app")
+      .send();
+    equal(ok.status, 303);
+    equal(await reader.who(), "reader@example.com");
+  });
+}

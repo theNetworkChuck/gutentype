@@ -2,7 +2,7 @@ import { createHash, randomBytes } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
 import { type Context } from "@fastr/core";
-import { BadRequestError, createError } from "@fastr/errors";
+import { BadRequestError, createError, ForbiddenError } from "@fastr/errors";
 import { siteName } from "@gutentype/content";
 import { type DataDir, Env } from "@keybr/config";
 import { User, UserLoginRequest } from "@keybr/database";
@@ -260,4 +260,26 @@ ${link}
 It works once and expires in 15 minutes. If you did not ask for it, you can ignore this email.
 `,
   };
+}
+
+/**
+ * Login CSRF guard for `POST /login/{token}` (Fable check, 2026-11-02). Another site auto-posting an attacker's
+ * own link would sign a visitor into the attacker's account, and the visitor's reading progress would then sync
+ * into it. The POST is accepted only when the browser says it came from this site: `Sec-Fetch-Site: same-origin`,
+ * or an `Origin` equal to the site's own. A request with neither header is refused (every current browser sends
+ * one on a form POST). Runs before the token is looked up, so a refused POST never uses a link up.
+ */
+export function assertSameOrigin(ctx: Context, canonicalUrl: string): void {
+  const site = ctx.request.headers.get("Sec-Fetch-Site");
+  const origin = ctx.request.headers.get("Origin");
+  const own = new URL(canonicalUrl).origin;
+  const ok =
+    site != null
+      ? site === "same-origin" && (origin == null || origin === own)
+      : origin === own;
+  if (!ok) {
+    throw new ForbiddenError(
+      "This sign-in must be confirmed on the Gutentype page itself.",
+    );
+  }
 }
