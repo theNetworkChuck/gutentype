@@ -1,3 +1,11 @@
+/* eslint-disable n/no-extraneous-import -- the "@gutentype/lesson" dependency line is the integrator's to add */
+import {
+  loadLearnCorpus,
+  offeredLessonType,
+  packModel,
+  ScriptureLesson,
+} from "@gutentype/lesson";
+/* eslint-enable n/no-extraneous-import */
 import { loadContent } from "@keybr/content-books";
 import { loadWordList } from "@keybr/content-words";
 import { catchError } from "@keybr/debug";
@@ -6,7 +14,6 @@ import {
   BooksLesson,
   CodeLesson,
   CustomTextLesson,
-  GuidedLesson,
   type Lesson,
   lessonProps,
   LessonType,
@@ -26,8 +33,16 @@ export function LessonLoader({
   readonly children: (result: Lesson) => ReactNode;
   readonly fallback?: ReactNode;
 }): ReactNode {
-  const { settings } = useSettings();
-  const lessonType = settings.get(lessonProps.type);
+  const { settings, updateSettings } = useSettings();
+  // Gutentype: Learn offers only the scripture lesson and custom text (ISC-68); a saved profile on any other
+  // lesson type falls back to the scripture lesson.
+  const savedType = settings.get(lessonProps.type);
+  const lessonType = offeredLessonType(savedType);
+  useEffect(() => {
+    if (lessonType !== savedType) {
+      updateSettings(settings.set(lessonProps.type, lessonType));
+    }
+  }, [settings, updateSettings, savedType, lessonType]);
   const { language } = KeyboardOptions.from(settings);
   return (
     <PhoneticModelLoader language={language}>
@@ -66,12 +81,20 @@ function useLoader(model: PhoneticModel): Lesson | null {
     let didCancel = false;
 
     const load = async (): Promise<void> => {
-      switch (settings.get(lessonProps.type)) {
+      switch (offeredLessonType(settings.get(lessonProps.type))) {
         case LessonType.GUIDED: {
-          const { language } = KeyboardOptions.from(settings);
-          const wordList = await loadWordList(language);
+          // Gutentype: the scripture lesson on the active pack. The pack model is built here because
+          // PhoneticModelLoader is keyed by language only.
+          const corpus = await loadLearnCorpus(settings);
           if (!didCancel) {
-            setResult(new GuidedLesson(settings, keyboard, model, wordList));
+            setResult(
+              new ScriptureLesson(
+                settings,
+                keyboard,
+                packModel(model, corpus.pack),
+                corpus,
+              ),
+            );
           }
           break;
         }
