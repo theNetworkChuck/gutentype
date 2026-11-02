@@ -23,16 +23,23 @@ import { LessonPreview } from "./lesson/LessonPreview.tsx";
 import { NumbersLessonSettings } from "./lesson/NumbersLessonSettings.tsx";
 import { WordListLessonSettings } from "./lesson/WordListLessonSettings.tsx";
 
+// Gutentype: only the scripture lesson and custom text are offered (ISC-68); the same list as @gutentype/lesson's
+// offeredLessonTypes, where LessonLoader sends a saved profile on any other type back to the scripture lesson.
+const offeredLessonTypes = [LessonType.GUIDED, LessonType.CUSTOM];
+
 export function LessonSettings(): ReactNode {
   const { formatMessage } = useIntl();
   const { settings, updateSettings } = useSettings();
   return (
     <>
       <TabList
-        selectedIndex={LessonType.ALL.indexOf(settings.get(lessonProps.type))}
+        selectedIndex={Math.max(
+          0,
+          offeredLessonTypes.indexOf(settings.get(lessonProps.type)),
+        )}
         onSelect={(index) => {
           updateSettings(
-            settings.set(lessonProps.type, LessonType.ALL.at(index)),
+            settings.set(lessonProps.type, offeredLessonTypes[index]),
           );
         }}
       >
@@ -44,32 +51,8 @@ export function LessonSettings(): ReactNode {
         />
         <Tab
           label={formatMessage({
-            id: "t_Common_words",
-            defaultMessage: "Common words",
-          })}
-        />
-        <Tab
-          label={formatMessage({
-            id: "t_Books",
-            defaultMessage: "Books",
-          })}
-        />
-        <Tab
-          label={formatMessage({
             id: "t_Custom_text",
             defaultMessage: "Custom text",
-          })}
-        />
-        <Tab
-          label={formatMessage({
-            id: "t_Source_code",
-            defaultMessage: "Source code",
-          })}
-        />
-        <Tab
-          label={formatMessage({
-            id: "t_Numbers",
-            defaultMessage: "Numbers",
           })}
         />
       </TabList>

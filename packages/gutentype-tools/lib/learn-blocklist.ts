@@ -1,0 +1,131 @@
+/**
+ * The reviewed Learn blocklist (ISC-53) and the divine-names list, read by `build-learn.ts`.
+ *
+ * A blocked word never appears in a Learn lesson: not as a drill word, and no verse fragment that contains it is
+ * kept. The test is "would a parent want a child drilling this word over and over with no verse around it", not
+ * "is this word in Scripture" (every one of them is). Reading (`/read`) is unaffected: verses are typed whole there.
+ *
+ * Each entry: the word, one line saying why. `build-learn.ts` writes into each pack's `learn.json` only the entries
+ * that occur in that pack's word list, so one reviewed list serves BSB, KJV and any later English pack.
+ * Reviewed 2026-11-02 against every word of both packs matching crude, sexual, anatomical or profane stems.
+ */
+export const blocklist: readonly (readonly [word: string, reason: string])[] = [
+  // Archaic words a modern reader takes as crude.
+  ["ass", "KJV word for donkey; read today as a crude word"],
+  ["asses", "KJV plural of donkey; read today as a crude word"],
+  ["cock", "KJV word for rooster; read today as a crude word"],
+  ["piss", "KJV word for urine; crude today"],
+  ["pisseth", "KJV verb for urinating; crude today"],
+  [
+    "gay",
+    "KJV word for fine clothing (James 2:3); out of context it reads as a label for people",
+  ],
+  ["bastard", "KJV word for a child of illegitimate birth; a slur today"],
+  ["bastards", "plural of bastard; a slur today"],
+  ["hell", "reads as profanity when drilled out of context"],
+  ["damned", "reads as profanity when drilled out of context"],
+  ["damnable", "reads as profanity when drilled out of context"],
+  ["damnation", "reads as profanity when drilled out of context"],
+  // Sexual words.
+  ["whore", "sexual"],
+  ["whores", "sexual"],
+  ["whoredom", "sexual"],
+  ["whoredoms", "sexual"],
+  ["whoring", "sexual"],
+  ["whorish", "sexual"],
+  ["whoremonger", "sexual"],
+  ["whoremongers", "sexual"],
+  ["harlot", "sexual"],
+  ["harlots", "sexual"],
+  ["harlotries", "sexual"],
+  ["prostitute", "sexual"],
+  ["prostitutes", "sexual"],
+  ["prostituted", "sexual"],
+  ["prostituting", "sexual"],
+  ["prostitution", "sexual"],
+  ["fornication", "sexual"],
+  ["fornications", "sexual"],
+  ["fornicator", "sexual"],
+  ["fornicators", "sexual"],
+  ["adultery", "sexual; a parent's conversation, not a drill word"],
+  ["adulteries", "sexual"],
+  ["adulterer", "sexual"],
+  ["adulterers", "sexual"],
+  ["adulteress", "sexual"],
+  ["adulteresses", "sexual"],
+  ["adulterous", "sexual"],
+  ["concubine", "sexual"],
+  ["concubines", "sexual"],
+  ["sexual", "sexual"],
+  ["sexually", "sexual"],
+  ["homosexual", "sexual"],
+  ["homosexuals", "sexual"],
+  ["sodomite", "sexual"],
+  ["sodomites", "sexual"],
+  ["carnally", "sexual (to lie with someone carnally)"],
+  ["copulation", "sexual"],
+  ["semen", "sexual"],
+  ["emission", "sexual (emission of semen, Leviticus 15)"],
+  ["lewd", "sexual"],
+  ["lewdly", "sexual"],
+  ["lewdness", "sexual"],
+  ["lasciviousness", "sexual"],
+  ["lustful", "sexual"],
+  ["lusty", "sexual"],
+  ["orgies", "sexual"],
+  ["seductive", "sexual"],
+  ["rape", "sexual violence"],
+  ["raped", "sexual violence"],
+  ["ravished", "sexual violence"],
+  ["virginity", "sexual"],
+  ["nakedness", "sexual euphemism (to uncover nakedness, Leviticus 18)"],
+  // Anatomical and bodily words.
+  ["breast", "anatomical"],
+  ["breasts", "anatomical"],
+  ["teats", "anatomical"],
+  ["buttocks", "anatomical"],
+  ["genitals", "anatomical"],
+  ["testicle", "anatomical"],
+  ["testicles", "anatomical"],
+  ["foreskin", "anatomical"],
+  ["foreskins", "anatomical"],
+  ["privy", "KJV anatomical euphemism (privy member, Deuteronomy 23:1)"],
+  [
+    "circumcise",
+    "an anatomical procedure; explaining it is a parent's call, not a drill's",
+  ],
+  ["circumcised", "an anatomical procedure"],
+  ["circumcising", "an anatomical procedure"],
+  ["circumcision", "an anatomical procedure"],
+  ["uncircumcised", "an anatomical procedure"],
+  ["uncircumcision", "an anatomical procedure"],
+  ["menstrual", "bodily"],
+  ["menstruation", "bodily"],
+  ["menstruating", "bodily"],
+  ["menstruous", "bodily"],
+  ["urine", "bodily"],
+  ["excrement", "bodily"],
+  ["dung", "bodily; crude when drilled alone"],
+  ["dunghill", "bodily; crude when drilled alone"],
+  ["dunghills", "bodily; crude when drilled alone"],
+];
+
+/**
+ * Lowercased divine names. Learn never draws one as a loose drill word, and keeps no fragment that starts or ends
+ * with one, so a divine name in a lesson only ever sits between words of the verse it came from.
+ */
+export const divineNames: readonly string[] = [
+  "god",
+  "lord",
+  "jesus",
+  "christ",
+  "jehovah",
+  "jah",
+  "messiah",
+  "immanuel",
+  "emmanuel",
+  "almighty",
+  "savior",
+  "saviour",
+  "redeemer",
+];
