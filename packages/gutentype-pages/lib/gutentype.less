@@ -1,0 +1,59 @@
+/*
+ * The Gutentype layout and the shape marks. Global on purpose: it targets the data-gt hooks in Keybr's
+ * Template.tsx and the inline styles Keybr's text input renders, which survive Keybr's hashed class names.
+ */
+
+[data-gt="layout"] {
+  display: grid;
+  grid-template-areas:
+    "main nav"
+    "footer footer";
+  grid-template-rows: 1fr auto;
+  grid-template-columns: minmax(0, 1fr) auto;
+  min-block-size: 100vb;
+}
+
+[data-gt="main"] {
+  z-index: 1;
+  grid-area: main;
+  min-inline-size: 0;
+}
+
+[data-gt="nav"] {
+  grid-area: nav;
+  margin: 0;
+  padding-inline: 1rem;
+  padding-block: 1rem;
+}
+
+[data-gt="footer"] {
+  grid-area: footer;
+}
+
+/* Phones: one column, nav on top, footer last (CONTRACTS § 7). */
+@media (max-width: 40rem) {
+  [data-gt="layout"] {
+    grid-template-areas:
+      "nav"
+      "main"
+      "footer";
+    grid-template-rows: auto 1fr auto;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  [data-gt="nav"] {
+    padding-block: 0.5rem;
+  }
+}
+
+/* ISC-5: a character typed wrong is underlined wavy, a stray character is struck through. */
+span[style*="--textinput--miss__color"]:not([style*="background"]) {
+  text-decoration: underline wavy;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.18em;
+}
+
+span[style*="--textinput--miss__color"][style*="background"] {
+  text-decoration: line-through;
+  text-decoration-thickness: 0.12em;
+}

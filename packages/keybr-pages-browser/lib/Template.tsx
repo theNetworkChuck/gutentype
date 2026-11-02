@@ -1,10 +1,11 @@
-import { isPremiumUser, usePageData } from "@keybr/pages-shared";
-import { AdBanner } from "@keybr/thirdparties";
+// eslint-disable-next-line n/no-extraneous-import -- the "@gutentype/pages" dependency line is the integrator's (CONTRACTS)
+import { GutentypeFooter, GutentypeNav } from "@gutentype/pages";
 import { PortalContainer, Toaster } from "@keybr/widget";
 import { type ReactNode } from "react";
-import { NavMenu } from "./NavMenu.tsx";
-import * as styles from "./Template.module.less";
+import { ThemeSwitcher } from "./themes/ThemeSwitcher.tsx";
 
+// Gutentype: one layout for everyone (no ad slots, no premium variant), Gutentype's nav and footer, and data-gt
+// hooks the Gutentype stylesheet stacks under 40rem (CONTRACTS § 7).
 export function Template({
   path,
   children,
@@ -12,35 +13,17 @@ export function Template({
   readonly path: string;
   readonly children: ReactNode;
 }) {
-  const { publicUser } = usePageData();
-  return isPremiumUser(publicUser) ? (
-    <div className={styles.bodyAlt}>
-      <main className={styles.mainAlt}>
+  return (
+    <div data-gt="layout">
+      <main data-gt="main">
         {children}
         <PortalContainer />
         <Toaster />
       </main>
-      <nav className={styles.navAlt}>
-        <NavMenu currentPath={path} />
+      <nav data-gt="nav">
+        <GutentypeNav currentPath={path} extra={<ThemeSwitcher />} />
       </nav>
-      <EnvName />
-    </div>
-  ) : (
-    <div className={styles.body}>
-      <main className={styles.main}>
-        {children}
-        <PortalContainer />
-        <Toaster />
-      </main>
-      <nav className={styles.nav}>
-        <NavMenu currentPath={path} />
-      </nav>
-      <div className={styles.topbar}>
-        <AdBanner name="BANNER_970X90_1" />
-      </div>
-      <div className={styles.sidebar}>
-        <AdBanner name="BANNER_160X600_1" />
-      </div>
+      <GutentypeFooter />
       <EnvName />
     </div>
   );
