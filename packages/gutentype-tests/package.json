@@ -9,6 +9,7 @@
     "@gutentype/content": "*",
     "@gutentype/lesson": "*",
     "@gutentype/pages": "*",
+    "@gutentype/profile": "*",
     "@gutentype/read": "*",
     "@gutentype/server": "*",
     "@gutentype/tools": "*",

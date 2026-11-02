@@ -15,7 +15,6 @@ import {
 import {
   AccuracyComparison,
   SpeedComparison,
-  // eslint-disable-next-line n/no-extraneous-import -- deps_needed: "@gutentype/profile" in gutentype-tests
 } from "@gutentype/profile/lib/Comparison.tsx";
 import {
   accuracyDistribution,
@@ -23,7 +22,6 @@ import {
   parsePopulation,
   populationPath,
   speedDistribution,
-  // eslint-disable-next-line n/no-extraneous-import -- deps_needed: "@gutentype/profile" in gutentype-tests
 } from "@gutentype/profile/lib/population.ts";
 import { lessonPopulation } from "@gutentype/server";
 import { FakeIntlProvider } from "@keybr/intl";

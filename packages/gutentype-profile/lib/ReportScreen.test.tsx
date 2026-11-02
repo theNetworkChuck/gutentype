@@ -1,9 +1,7 @@
 import { afterEach, test } from "node:test";
 import { minComparisonLessons, populationPath } from "@gutentype/content";
 import { FakeIntlProvider } from "@keybr/intl";
-// eslint-disable-next-line n/no-extraneous-import -- deps_needed: "@keybr/keyboard" in gutentype-profile
 import { KeyboardProvider } from "@keybr/keyboard";
-// eslint-disable-next-line n/no-extraneous-import -- deps_needed: "@keybr/page-typing-test" in gutentype-profile
 import { mockResult } from "@keybr/page-typing-test/lib/mock.ts";
 import { FakeSettingsContext } from "@keybr/settings";
 import { render } from "@testing-library/react";

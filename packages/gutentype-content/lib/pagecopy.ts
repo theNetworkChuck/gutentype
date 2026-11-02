@@ -30,7 +30,7 @@ export const privacyCopy: {
       heading: "If you sign in",
       paragraphs: [
         "Signing in stores your email and your reading progress (which books and chapters you typed) so they follow you to other devices.",
-        "On our server we keep: your account (email, a display name, the date you joined, and whether you chose to stay anonymous); if you use Google, the Google account id, name, profile link and picture link Google sends us; pending sign-in links (deleted after 15 minutes or on use); your settings and lesson statistics; your reading progress per verse (speed and accuracy); and a session file that keeps you signed in for 14 days.",
+        "On our server we keep: your account (email, a display name, the date you joined, and whether you chose to stay anonymous); if you use Google, the Google account id, name, profile link and picture link Google sends us; pending sign-in links (deleted after 15 minutes or on use); your settings and lesson statistics; your best lesson results in a high-score list (kept for the high-score table, which is switched off); your reading progress per verse (speed and accuracy); and a session file that keeps you signed in for 14 days.",
         "To stop abuse of sign-in emails we keep a salted hash of the email address and of the network address for one hour after each sign-in request. A table left from Keybr's paid tier (orders) exists but is always empty: there is nothing to buy.",
         "Sign-in emails are sent by our email provider, which sees your address to deliver the message.",
       ],

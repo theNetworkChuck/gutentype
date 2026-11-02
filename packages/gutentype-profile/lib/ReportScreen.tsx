@@ -7,17 +7,11 @@ import {
   TimeToTypeHistogram,
 } from "@keybr/chart";
 import { useIntlNumbers } from "@keybr/intl";
-// eslint-disable-next-line n/no-extraneous-import -- deps_needed: "@keybr/lesson-ui" in gutentype-profile
 import { useFormatter } from "@keybr/lesson-ui";
-// eslint-disable-next-line n/no-extraneous-import -- deps_needed: "@keybr/page-typing-test" in gutentype-profile
 import { Replay } from "@keybr/page-typing-test/lib/components/Replay.tsx";
-// eslint-disable-next-line n/no-extraneous-import -- deps_needed: "@keybr/page-typing-test" in gutentype-profile
 import * as styles from "@keybr/page-typing-test/lib/components/ReportScreen.module.less";
-// eslint-disable-next-line n/no-extraneous-import -- deps_needed: "@keybr/page-typing-test" in gutentype-profile
 import { type TestResult } from "@keybr/page-typing-test/lib/session/index.ts";
-// eslint-disable-next-line n/no-extraneous-import -- deps_needed: "@keybr/page-typing-test" in gutentype-profile
 import { views } from "@keybr/page-typing-test/lib/views.tsx";
-// eslint-disable-next-line n/no-extraneous-import -- deps_needed: "@keybr/pages-shared" in gutentype-profile
 import { Screen } from "@keybr/pages-shared";
 import {
   Box,

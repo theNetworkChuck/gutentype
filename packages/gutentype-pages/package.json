@@ -7,6 +7,7 @@
   "types": ".types/index.d.ts",
   "dependencies": {
     "@gutentype/content": "*",
+    "@gutentype/profile": "*",
     "@gutentype/read": "*",
     "@keybr/intl": "*",
     "@keybr/keyboard": "*",
