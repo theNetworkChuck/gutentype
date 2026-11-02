@@ -46,6 +46,8 @@ export type LearnData = {
   readonly blocklist: readonly string[];
   /** Lowercased divine names a flagged word may never sit beside. */
   readonly divineNames: readonly string[];
+  /** Words the pack only ever capitalizes (names); Learn picks them less often (ISC-71). Absent in older files. */
+  readonly names?: readonly string[];
 };
 
 export class Pack implements EnumItem {

@@ -23,6 +23,7 @@ export type LearnJson = {
   fragments: string[][];
   blocklist: string[];
   divineNames: string[];
+  names: string[];
 };
 
 type PackJson = {
@@ -109,7 +110,11 @@ export function buildLearn(
   const divine = new Set(divineNames.filter((w) => words.has(w)));
   const rank = new Map(pack.letters.map(([ch], i) => [ch, i]));
   const byStage = new Map<number, Map<string, string[]>>();
+  const seenLower = new Set<string>();
   for (const verse of verses) {
+    for (const [w] of verse.matchAll(/[A-Za-z]+/g)) {
+      if (w[0] === w[0].toLowerCase()) seenLower.add(w.toLowerCase());
+    }
     for (const fragment of fragmentsOf(verse)) {
       if (fragment.some((w) => blocked.has(w))) continue;
       if (divine.has(fragment[0]) || divine.has(fragment.at(-1)!)) continue;
@@ -137,6 +142,8 @@ export function buildLearn(
       fragments,
       blocklist: [...blocked].sort(),
       divineNames: [...divine].sort(),
+      // ISC-71: words that appear only with a capital first letter (names, in practice).
+      names: [...words].filter((w) => !seenLower.has(w)).sort(),
     },
     perStage,
   };

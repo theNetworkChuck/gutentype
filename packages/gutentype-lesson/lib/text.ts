@@ -19,6 +19,23 @@ export function randomWords(
   };
 }
 
+/**
+ * Gutentype (ISC-71): like randomWords, but each word is picked in proportion to its weight (see lesson.ts).
+ */
+export function weightedWords(
+  wordList: readonly string[],
+  weight: (word: string) => number,
+  random: RNG,
+): WordGenerator {
+  return () => {
+    if (wordList.length > 0) {
+      return weightedRandomSample(wordList, weight, random);
+    } else {
+      return null;
+    }
+  };
+}
+
 export function uniqueWords(nextWord: WordGenerator): WordGenerator {
   let last = "";
   return () => {

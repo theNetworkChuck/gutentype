@@ -12,6 +12,10 @@ export type ScriptureCorpus = {
   readonly pack: Pack;
   /** Drill words: the pack's words of three letters or more, most frequent first, with no blocked word and no divine name. */
   readonly words: readonly string[];
+  /** How often each drill word occurs in the pack; lessons pick common words more often (ISC-71). */
+  readonly wordCounts: ReadonlyMap<string, number>;
+  /** Words the pack only ever capitalizes; lessons pick them a fifth as often (ISC-71). */
+  readonly names: ReadonlySet<string>;
   /** Verse fragments (3 to 5 consecutive words), none holding a blocked word, none starting or ending with a divine name. */
   readonly fragments: readonly (readonly string[])[];
   readonly blocklist: ReadonlySet<string>;
@@ -39,6 +43,8 @@ export function makeCorpus(
         (word) =>
           word.length > 2 && !blocklist.has(word) && !divineNames.has(word),
       ),
+    wordCounts: new Map(words.map(([word, count]) => [word, count])),
+    names: new Set(learn.names ?? []),
     // learn.json is built to these rules already; they are checked again here so a hand-edited file cannot break them.
     fragments: learn.fragments.filter(
       (fragment) =>

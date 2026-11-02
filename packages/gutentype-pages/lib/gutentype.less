@@ -32,6 +32,12 @@
 
 /* Phones: one column, nav on top, footer last (CONTRACTS § 7). */
 @media (max-width: 40rem) {
+  /* Keybr sizes the root font for desktops (8px under 1280px), which leaves verse text near 9px on a phone.
+     Phones read and type verses here (ISC-43, ISC-61), so the root goes to 14px; :root outranks Keybr's html rule. */
+  :root {
+    font-size: 14px;
+  }
+
   [data-gt="layout"] {
     grid-template-areas:
       "nav"
