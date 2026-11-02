@@ -1,0 +1,365 @@
+/*
+ * Read track layout. It never uses Keybr's Screen (its 60rem minimum width breaks phones): pages are a centered
+ * column that narrows to the 16px phone gutter. Status is never color alone: every mark is a glyph plus a word.
+ */
+
+.page {
+  box-sizing: border-box;
+  inline-size: 100%;
+  max-inline-size: 52rem;
+  margin-inline: auto;
+  padding-inline: 1rem;
+  padding-block: 1rem 4rem;
+}
+
+.label {
+  margin-block: 0 1rem;
+  color: var(--text-color-f1);
+  font-size: 0.9rem;
+}
+
+.intro {
+  max-inline-size: 40rem;
+}
+
+.crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  margin-block: 0 1rem;
+  font-size: 0.9rem;
+}
+
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 2rem;
+  margin-inline: 0;
+  margin-block: 1rem;
+  padding: 0;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+
+.statName {
+  color: var(--text-color-f1);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.statValue {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: bold;
+  font-variant-numeric: tabular-nums;
+}
+
+.list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+  gap: 0.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.chapterList {
+  grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  box-sizing: border-box;
+  block-size: 100%;
+  padding-inline: 0.8rem;
+  padding-block: 0.6rem;
+  border: 1px solid var(--separator-color);
+  border-radius: 0.4rem;
+  color: inherit;
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+    border-color: var(--text-color);
+  }
+}
+
+.tileDone {
+  border-width: 2px;
+  border-style: solid;
+}
+
+.tileName {
+  font-weight: bold;
+}
+
+.featured {
+  grid-column: 1 / -1;
+
+  .tile {
+    border-width: 2px;
+  }
+
+  .tileName {
+    font-size: 1.3rem;
+  }
+}
+
+.featuredTag {
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.mark {
+  display: inline-flex;
+  gap: 0.35em;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.glyph {
+  display: inline-block;
+  inline-size: 1.1em;
+  font-weight: bold;
+  text-align: center;
+}
+
+.resume {
+  display: inline-block;
+  margin-block: 0.5rem 1.5rem;
+  padding-inline: 0.9rem;
+  padding-block: 0.5rem;
+  border: 2px solid var(--text-color);
+  border-radius: 0.4rem;
+  color: inherit;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.verses {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.verse {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr);
+  gap: 0.75rem;
+  padding-block: 0.5rem;
+  border-block-end: 1px solid var(--separator-color);
+}
+
+.number {
+  align-self: start;
+  padding: 0;
+  border: none;
+  color: var(--text-color-f1);
+  background: none;
+  font: inherit;
+  text-align: end;
+  cursor: pointer;
+  font-variant-numeric: tabular-nums;
+
+  &:hover,
+  &:focus-visible {
+    color: var(--text-color);
+    text-decoration: underline;
+  }
+}
+
+.numberStatic {
+  cursor: default;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.verseBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-inline-size: 0;
+}
+
+.verseText {
+  font-size: 1.15rem;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.upcoming .verseText {
+  color: var(--text-color-f1);
+}
+
+.omitted .verseText {
+  font-style: italic;
+}
+
+.verseStats {
+  color: var(--text-color-f1);
+  font-size: 0.85rem;
+}
+
+.active {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr);
+  gap: 0.75rem;
+  margin-block: 0.5rem;
+  padding-inline: 0;
+  padding-block: 0.75rem;
+  border: 2px solid var(--text-color);
+  border-radius: 0.4rem;
+  scroll-margin-block: 1rem;
+}
+
+.activeLabel {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  color: var(--text-color);
+  font-variant-numeric: tabular-nums;
+}
+
+.activeTag {
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.typing {
+  position: relative;
+  min-inline-size: 0;
+  padding-inline-end: 0.75rem;
+}
+
+.notice {
+  margin-block: 1rem;
+  padding-inline: 1rem;
+  padding-block: 0.75rem;
+  border: 2px solid var(--text-color);
+  border-radius: 0.4rem;
+}
+
+.pager {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+  margin-block: 1.5rem 0;
+}
+
+.card {
+  margin-block: 1.5rem;
+}
+
+.cardFace {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  box-sizing: border-box;
+  max-inline-size: 36rem;
+  aspect-ratio: 1200 / 630;
+  padding: 1.5rem;
+  border: 2px solid var(--text-color);
+  border-radius: 0.6rem;
+}
+
+.cardSite {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+}
+
+.cardHeading {
+  color: var(--text-color-f1);
+}
+
+.cardBook {
+  font-size: 2.6rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.cardTranslation {
+  color: var(--text-color-f1);
+}
+
+.cardStats {
+  margin-block-start: auto;
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+.cardDate {
+  color: var(--text-color-f1);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin-block: 1rem;
+}
+
+.shareField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  max-inline-size: 36rem;
+  font-size: 0.9rem;
+}
+
+.shareInput {
+  box-sizing: border-box;
+  inline-size: 100%;
+  padding: 0.4rem;
+  border: 1px solid var(--separator-color);
+  border-radius: 0.3rem;
+  color: inherit;
+  background: none;
+  font: inherit;
+}
+
+.note {
+  color: var(--text-color-f1);
+  font-size: 0.85rem;
+}
+
+.offer {
+  display: inline-block;
+  padding-inline: 0.9rem;
+  padding-block: 0.5rem;
+  border: 2px solid var(--text-color);
+  border-radius: 0.4rem;
+  color: inherit;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+/* Phones: the 16px gutter, a narrower number column, and Keybr's 2rem typing text scaled to fit. */
+@media (width <= 40rem) {
+  .verse,
+  .active {
+    grid-template-columns: 2rem minmax(0, 1fr);
+    gap: 0.5rem;
+  }
+
+  .typing {
+    zoom: 0.62;
+  }
+
+  .cardBook {
+    font-size: 2rem;
+  }
+}
