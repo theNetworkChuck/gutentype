@@ -1,0 +1,4 @@
+{
+  "packages/page-typing-test/lib/generators/TextGeneratorLoader.tsx": "packages/gutentype-typing-test/lib/TextGeneratorLoader.tsx",
+  "packages/page-typing-test/lib/components/settings/TextGeneratorSettings.tsx": "packages/gutentype-typing-test/lib/TextGeneratorSettings.tsx"
+}
