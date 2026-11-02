@@ -1,16 +1,13 @@
 import { type Binder, inject, type Module, provides } from "@fastr/invert";
 import { Env } from "@keybr/config";
-import {
-  type AbstractAdapter,
-  FacebookAdapter,
-  GoogleAdapter,
-  MicrosoftAdapter,
-} from "@keybr/oauth";
+import { type AbstractAdapter, GoogleAdapter } from "@keybr/oauth";
 
 export abstract class AdapterFactory {
   abstract makeAdapter(redirectUri: string): AbstractAdapter;
 }
 
+// Gutentype: Google is the only OAuth door and asks for the email scope only (ISC-21, ISC-23); the facebook
+// and microsoft adapters are not registered, so their routes answer 404.
 export class AuthModule implements Module {
   configure(binder: Binder) {}
 
@@ -20,48 +17,10 @@ export class AuthModule implements Module {
   ): AdapterFactory {
     const clientId = Env.getString("AUTH_GOOGLE_CLIENT_ID");
     const clientSecret = Env.getString("AUTH_GOOGLE_CLIENT_SECRET");
-    const scope = ["email", "profile"].join(" ");
+    const scope = ["email"].join(" ");
     return new (class GoogleAdapterFactory extends AdapterFactory {
       makeAdapter(redirectUri: string): AbstractAdapter {
         return new GoogleAdapter({
-          clientId,
-          clientSecret,
-          scope,
-          redirectUri: String(new URL(redirectUri, canonicalUrl)),
-        });
-      }
-    })();
-  }
-
-  @provides({ id: AdapterFactory, name: "microsoft", singleton: true })
-  provideMicrosoftAdapter(
-    @inject("canonicalUrl") canonicalUrl: string,
-  ): AdapterFactory {
-    const clientId = Env.getString("AUTH_MICROSOFT_CLIENT_ID");
-    const clientSecret = Env.getString("AUTH_MICROSOFT_CLIENT_SECRET");
-    const scope = ["https://graph.microsoft.com/User.Read"].join(" ");
-    return new (class MicrosoftAdapterFactory extends AdapterFactory {
-      makeAdapter(redirectUri: string): AbstractAdapter {
-        return new MicrosoftAdapter({
-          clientId,
-          clientSecret,
-          scope,
-          redirectUri: String(new URL(redirectUri, canonicalUrl)),
-        });
-      }
-    })();
-  }
-
-  @provides({ id: AdapterFactory, name: "facebook", singleton: true })
-  provideFacebookAdapter(
-    @inject("canonicalUrl") canonicalUrl: string,
-  ): AdapterFactory {
-    const clientId = Env.getString("AUTH_FACEBOOK_CLIENT_ID");
-    const clientSecret = Env.getString("AUTH_FACEBOOK_CLIENT_SECRET");
-    const scope = ["email", "public_profile"].join(",");
-    return new (class FacebookAdapterFactory extends AdapterFactory {
-      makeAdapter(redirectUri: string): AbstractAdapter {
-        return new FacebookAdapter({
           clientId,
           clientSecret,
           scope,
