@@ -1,0 +1,16 @@
+{
+  "private": true,
+  "name": "@keybr/thirdparties",
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Gutentype's stand-in for Keybr's thirdparties package: the same exports, none of which loads a third-party script (ISC-4, ISC-45).",
+  "main": "lib/index.ts",
+  "types": ".types/index.d.ts",
+  "sideEffects": false,
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "clean": "rm -fr .types",
+    "compile": "tsc"
+  }
+}

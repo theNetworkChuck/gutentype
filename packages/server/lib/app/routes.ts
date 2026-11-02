@@ -2,7 +2,6 @@ import { allToRoutes } from "@fastr/controller";
 import { type Middleware } from "@fastr/core";
 import { Router } from "@fastr/middleware-router";
 import { Controller as AuthController } from "./auth/index.ts";
-import { Controller as CheckoutController } from "./checkout/index.ts";
 import { Controller as GameController } from "./game/index.ts";
 import { Controller as HighScoresController } from "./highscores/index.ts";
 import { Controller as PageController } from "./page/index.ts";
@@ -16,7 +15,6 @@ export function mainRoutes(): Middleware<any> {
     .registerAll(
       allToRoutes(
         AuthController,
-        CheckoutController,
         HighScoresController,
         PageController,
         ProfileController,

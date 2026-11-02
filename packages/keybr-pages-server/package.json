@@ -6,6 +6,7 @@
   "main": "lib/index.ts",
   "types": ".types/index.d.ts",
   "dependencies": {
+    "@gutentype/content": "*",
     "@keybr/assets": "*",
     "@keybr/intl": "*",
     "@keybr/pages-shared": "*",
