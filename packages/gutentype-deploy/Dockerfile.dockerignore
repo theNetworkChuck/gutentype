@@ -1,0 +1,10 @@
+**/.env
+**/.env.*
+!.env.example
+.git
+.harness
+**/node_modules
+**/.types
+root/lib
+root/public/assets
+*.log

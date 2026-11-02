@@ -1,0 +1,21 @@
+{
+  "upstream": "https://github.com/aradzie/keybr.com.git",
+  "budget": 15,
+  "modified": [
+    { "path": "webpack.config.js", "reason": "Drops Keybr's ads bundle entry." },
+    { "path": "packages/keybr-pages-server/lib/Shell.tsx", "reason": "No third-party scripts; version meta; Gutentype title and metas; optional server-rendered body; plain-text label and footer." },
+    { "path": "packages/server/lib/app/routes.ts", "reason": "Drops Keybr's checkout; registers Gutentype's controllers and the route gate." }
+  ],
+  "manifests": [
+    { "path": "packages/keybr-pages-server/package.json", "reason": "Depends on @gutentype/content." },
+    { "path": "packages/server/package.json", "reason": "Drops the Paddle SDK." }
+  ],
+  "deleted": [
+    { "path": "packages/thirdparties", "reason": "Ads, analytics and consent scripts; replaced by packages/gutentype-thirdparties (same package name, no third-party code)." },
+    { "path": "packages/thirdparties-ads", "reason": "Ad network loader." },
+    { "path": "packages/server/lib/app/checkout", "reason": "Paddle checkout for Keybr's premium tier; Gutentype sells nothing." },
+    { "path": "packages/server/lib/app/auth/auth-email.test.ts", "reason": "Tests the reusable sign-in token that Gutentype replaces with single-use links; covered by gutentype-tests." },
+    { "path": "Dockerfile", "reason": "Ran Keybr's devenv initdb, which seeds a login token on every start; replaced by packages/gutentype-deploy." },
+    { "path": "docker-compose.yaml", "reason": "Built the removed Dockerfile; replaced by packages/gutentype-deploy/compose.yaml." }
+  ]
+}

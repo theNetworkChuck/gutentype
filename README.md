@@ -1,41 +1,68 @@
-[![CI](https://github.com/aradzie/keybr.com/actions/workflows/ci.yml/badge.svg)](https://github.com/aradzie/keybr.com/actions/workflows/ci.yml)
+# Gutentype
 
-# [keybr.com](https://www.keybr.com/) is not (just) a typing test
+Learn to touch-type. Every word you type is from the Bible.
 
-<p align="center">
-    <img src="assets/screenshot.png" alt="screenshot" width="600"/>
-</p>
+Gutentype is a free typing trainer built on [Keybr](https://github.com/aradzie/keybr.com)'s adaptive lesson engine. It has two tracks:
 
-It's the smartest way to learn touch typing and improve your typing speed.
-On the surface, it looks pretty simple: it shows you a piece of text, and you type it out.
-But the devil is in the details — keybr.com offers a few unique features:
+* **Learn.** Keybr's lessons, unchanged in what makes them work: they start with six letters, add the next key once the current ones are fast and accurate, and focus on your weakest key. Every word in every lesson is a real word from the Bible in the translation you picked, and the order the letters unlock in comes from that translation's own text.
+* **Read.** A chapter is the page. You type through a book verse by verse, with no timer, and pick up at the verse you stopped on. Finish a book and you get a card you can download and share.
 
-* keybr.com tracks every single keystroke and computes statistics for each individual key.
-* It automatically generates lessons that focus on your weakest keys.
-* You can set your own target typing speed, and it tracks your progress toward that goal.
-* It starts with a small set of the most frequent letters in your language.
-* More letters are added once you reach the target speed with the current ones.
-* It can even predict how many more lessons you will need to complete to reach your target speed.
-* It provides a beautiful profile page with detailed graphs showing your learning progress.
-* It offers plenty of modes and configuration options.
+No account is needed; your progress stays in your browser. Signing in (an emailed link or Google) only carries it to your other devices. No ads, no trackers, nothing to buy.
 
-<p align="center">
-    <img src="docs/assets/graph.png" alt="screenshot" width="600"/>
-</p>
+## Translations
 
-## Can I contribute?
+The Berean Standard Bible (public domain) is the default and the King James Version sits beside it. A translation is a content pack in `packages/gutentype-content`, built from its canonical source file by `packages/gutentype-tools/lib/build-packs.ts`; each pack records its source URL and the file's SHA-256.
 
-Yes!
+## Running it
 
-* **[Give us a ⭐️.](https://github.com/aradzie/keybr.com)** Help this project gain visibility and stand out.
-* **[Report a bug.](https://github.com/aradzie/keybr.com/issues)** If something is not working, let us know.
-* **[Suggest a feature.](https://github.com/aradzie/keybr.com/issues)** We are open to new ideas.
-* **[Translate.](./docs/translations.md)** If you want to see keybr.com in your language.
-* **[Getting started.](./docs/getting_started.md)** Launch a local instance of keybr.com, make a pull request.
-* **[Add a keyboard.](docs/custom_keyboard.md)** Add a custom keyboard to keybr.com
-* **[Add a language.](docs/custom_language.md)** Add a custom language to keybr.com
-* **[Join our Discord server](https://discord.gg/gY4RA4enVH).** To discuss things in a less formal way.
+Gutentype runs on Node 26 and installs with [bun](https://bun.sh):
+
+```shell
+bun install
+bun run compile
+bun run build
+bun run start        # http://localhost:3000
+```
+
+Production runs from `packages/gutentype-deploy` (Docker, sqlite on a data volume).
+
+## How it relates to Keybr
+
+<!-- fork:start -->
+
+Gutentype changes 4 of Keybr's own source files (this README included; the budget is under 15). Everything else lives in new `packages/gutentype-*` packages, so upstream fixes keep arriving with `packages/gutentype-tools/scripts/rebase-upstream.sh`.
+
+**Modified Keybr files**
+
+| File | Why |
+|---|---|
+| `README.md` | This file. |
+| `webpack.config.js` | Drops Keybr's ads bundle entry. |
+| `packages/keybr-pages-server/lib/Shell.tsx` | No third-party scripts; version meta; Gutentype title and metas; optional server-rendered body; plain-text label and footer. |
+| `packages/server/lib/app/routes.ts` | Drops Keybr's checkout; registers Gutentype's controllers and the route gate. |
+
+**Dependency lines added to Keybr manifests** (not counted)
+
+| File | Why |
+|---|---|
+| `packages/keybr-pages-server/package.json` | Depends on @gutentype/content. |
+| `packages/server/package.json` | Drops the Paddle SDK. |
+
+**Deleted from Keybr**
+
+| Path | Why |
+|---|---|
+| `packages/thirdparties` | Ads, analytics and consent scripts; replaced by packages/gutentype-thirdparties (same package name, no third-party code). |
+| `packages/thirdparties-ads` | Ad network loader. |
+| `packages/server/lib/app/checkout` | Paddle checkout for Keybr's premium tier; Gutentype sells nothing. |
+| `packages/server/lib/app/auth/auth-email.test.ts` | Tests the reusable sign-in token that Gutentype replaces with single-use links; covered by gutentype-tests. |
+| `Dockerfile` | Ran Keybr's devenv initdb, which seeds a login token on every start; replaced by packages/gutentype-deploy. |
+| `docker-compose.yaml` | Built the removed Dockerfile; replaced by packages/gutentype-deploy/compose.yaml. |
+
+Keybr's `package-lock.json` is left untouched: Gutentype installs with bun (`bun.lock`).
+
+<!-- fork:end -->
 
 ## License
 
-Released under the GNU Affero General Public License v3.0.
+Gutentype is a fork of keybr.com by Aliaksandr Radzivanovich and its contributors, and like Keybr it is licensed under the GNU Affero General Public License v3.0 (see `LICENSE`). The source of the running site is linked from its footer.

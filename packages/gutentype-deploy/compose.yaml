@@ -1,0 +1,23 @@
+# Gutentype on one VPS, behind Cloudflare. The data volume holds the sqlite database, per-user files and
+# sessions; env.production on the host holds secrets and is never in the image or the repo.
+#   GIT_SHA=$(git rev-parse --short HEAD) docker compose -f packages/gutentype-deploy/compose.yaml up -d --build
+services:
+  gutentype:
+    build:
+      context: ../..
+      dockerfile: packages/gutentype-deploy/Dockerfile
+      args:
+        GIT_SHA: ${GIT_SHA:-dev}
+    env_file:
+      - ./env.production
+    environment:
+      DATA_DIR: /data
+      DATABASE_CLIENT: sqlite
+      DATABASE_FILENAME: /data/database.sqlite
+    volumes:
+      - gutentype-data:/data
+    ports:
+      - "127.0.0.1:3000:3000"
+    restart: unless-stopped
+volumes:
+  gutentype-data:
