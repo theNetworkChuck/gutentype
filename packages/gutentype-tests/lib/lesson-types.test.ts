@@ -10,14 +10,12 @@ import {
   ScriptureLesson,
 } from "@gutentype/lesson";
 import { englishModel } from "@gutentype/tools/lib/learn-model.ts";
-/* eslint-disable n/no-extraneous-import -- dependency lines for these three are the integrator's to add */
 import { FakeIntlProvider } from "@keybr/intl";
 import { KeyboardContext, Layout, loadKeyboard } from "@keybr/keyboard";
 import { type Lesson, lessonProps, LessonType } from "@keybr/lesson";
 import { LessonLoader } from "@keybr/lesson-loader";
 import { LessonSettings } from "@keybr/page-practice/lib/settings/LessonSettings.tsx";
 import { PhoneticModelLoader } from "@keybr/phonetic-model-loader";
-/* eslint-enable n/no-extraneous-import */
 import { FakeResultContext } from "@keybr/result";
 import { FakeSettingsContext, Settings, useSettings } from "@keybr/settings";
 import { render } from "@testing-library/react";

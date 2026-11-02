@@ -24,12 +24,10 @@ Server.prototype.close = function (
   return close.call(this, callback);
 } as typeof close;
 
-/* eslint-disable n/no-extraneous-import */
 export { kGame, kMain } from "@keybr/server/lib/app/module.ts";
 export { TestContext } from "@keybr/server/lib/app/test/context.ts";
 export { startApp } from "@keybr/server/lib/app/test/request.ts";
 export { findUser } from "@keybr/server/lib/app/test/sql.ts";
-/* eslint-enable n/no-extraneous-import */
 
 /** Headers a request carries behind Cloudflare, so Keybr's canonical-host redirect lets it through. */
 export const viaProxy = {

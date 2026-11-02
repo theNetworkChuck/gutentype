@@ -6,6 +6,7 @@
   "main": "lib/index.ts",
   "types": ".types/index.d.ts",
   "dependencies": {
+    "@gutentype/lesson": "*",
     "@keybr/content-books": "*",
     "@keybr/content-words": "*",
     "@keybr/debug": "*",

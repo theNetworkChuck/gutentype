@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "dependencies": {
+    "@gutentype/pages": "*",
     "@keybr/debug": "*",
     "@keybr/intl": "*",
     "@keybr/keyboard": "*",

@@ -27,5 +27,6 @@ COPY --from=build /usr/src/app /usr/src/app
 ENV NODE_ENV=production
 EXPOSE 3000
 # Data and config live on the mounted volume (compose.yaml). initdb creates Keybr's and Gutentype's tables,
-# switches sqlite to WAL with a busy timeout, and seeds nothing.
-CMD ["sh", "-c", "node_modules/.bin/tsnode packages/gutentype-server/lib/initdb.ts && node --enable-source-maps ./root/index.js"]
+# switches sqlite to WAL with a busy timeout, and seeds nothing. It runs under node, not bun, because Keybr's
+# sqlite client needs node:sqlite. The server also creates the tables on its first request, so this is belt and braces.
+CMD ["sh", "-c", "node --import @keybr/tsl packages/gutentype-server/lib/cli/initdb.ts && node --enable-source-maps ./root/index.js"]

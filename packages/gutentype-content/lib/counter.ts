@@ -4,7 +4,10 @@
  */
 export type CounterName = "book-finished" | "lesson-ten";
 
-export const counterNames: readonly CounterName[] = ["book-finished", "lesson-ten"];
+export const counterNames: readonly CounterName[] = [
+  "book-finished",
+  "lesson-ten",
+];
 
 export const counterPath = (name: CounterName) => `/_/count/${name}`;
 

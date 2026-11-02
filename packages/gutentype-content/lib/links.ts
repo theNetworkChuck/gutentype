@@ -35,6 +35,12 @@ export const footerLinks = (sha: string = gitSha) =>
 
 /** Keybr routes that answer 404 unless their env flag is on (ISC-50). */
 export const flaggedRoutes = {
-  GUTENTYPE_MULTIPLAYER: [/^(\/[a-z]{2}(-[a-z]+)?)?\/multiplayer$/i, /^\/_\/game(\/|$)/],
-  GUTENTYPE_HIGHSCORES: [/^(\/[a-z]{2}(-[a-z]+)?)?\/high-scores$/i, /^\/_\/high-scores$/],
+  GUTENTYPE_MULTIPLAYER: [
+    /^(\/[a-z]{2}(-[a-z]+)?)?\/multiplayer$/i,
+    /^\/_\/game(\/|$)/,
+  ],
+  GUTENTYPE_HIGHSCORES: [
+    /^(\/[a-z]{2}(-[a-z]+)?)?\/high-scores$/i,
+    /^\/_\/high-scores$/,
+  ],
 } as const;

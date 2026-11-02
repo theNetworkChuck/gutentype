@@ -23,8 +23,7 @@ for (const path of [
   "/profile/example4",
   "/profile/example5",
   "/typing-test",
-  "/terms-of-service",
-  "/privacy-policy",
+  // Gutentype: Keybr's /terms-of-service and /privacy-policy always answer 404.
 ]) {
   test(`load page "${path}"`, async () => {
     // Arrange.

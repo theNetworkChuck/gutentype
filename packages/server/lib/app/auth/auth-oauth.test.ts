@@ -240,7 +240,7 @@ test("login a new user", async () => {
 
   {
     const response = await request //
-      .GET("/auth/oauth-init/fake")
+      .GET("/auth/oauth-init/fake?birthYear=1990&consent=true") // Gutentype: a new account needs a birth year and consent (ISC-57).
       .send();
     equal(response.status, 302);
     const url = new URL(response.headers.get("Location")!);

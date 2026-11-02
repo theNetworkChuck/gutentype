@@ -21,7 +21,11 @@
     "@keybr/themes": "*",
     "@keybr/widget": "*"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@keybr/lesson-ui": "*",
+    "@keybr/textinput": "*",
+    "@keybr/textinput-ui": "*"
+  },
   "scripts": {
     "clean": "rm -fr .types",
     "compile": "tsc",

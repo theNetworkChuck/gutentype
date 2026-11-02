@@ -1,5 +1,10 @@
 import { Enum, type EnumItem } from "@keybr/lang";
-import { importBook, importLearn, importWords, packInfos } from "./generated.ts";
+import {
+  importBook,
+  importLearn,
+  importWords,
+  packInfos,
+} from "./generated.ts";
 
 /** One book's verse counts, as `pack.json` lists it. */
 export type BookInfo = {

@@ -4,7 +4,7 @@ import { User } from "@keybr/database";
 import { PublicId } from "@keybr/publicid";
 import { ResultFaker } from "@keybr/result";
 import { UserDataFactory } from "@keybr/result-userdata";
-import { equal, isNull, isTrue, like } from "rich-assert";
+import { equal, isFalse, isNull, like } from "rich-assert";
 import { kMain } from "../module.ts";
 import { TestContext } from "../test/context.ts";
 import { startApp } from "../test/request.ts";
@@ -116,5 +116,5 @@ test("delete account", async () => {
   equal(response.status, 204);
   isNull(await request.who());
   isNull(await User.findById(user.id!));
-  isTrue(await userData.exists());
+  isFalse(await userData.exists()); // Gutentype: deleting an account also deletes its stats file (ISC-24).
 });

@@ -2,7 +2,6 @@ import {
   GutentypeAccountPage,
   GutentypeHome,
   gutentypeRoutes,
-  // eslint-disable-next-line n/no-extraneous-import -- the "@gutentype/pages" dependency line is the integrator's (CONTRACTS)
 } from "@gutentype/pages";
 import { ErrorHandler } from "@keybr/debug";
 import {

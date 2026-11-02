@@ -1,11 +1,9 @@
-/* eslint-disable n/no-extraneous-import -- the "@gutentype/lesson" dependency line is the integrator's to add */
 import {
   loadLearnCorpus,
   offeredLessonType,
   packModel,
   ScriptureLesson,
 } from "@gutentype/lesson";
-/* eslint-enable n/no-extraneous-import */
 import { loadContent } from "@keybr/content-books";
 import { loadWordList } from "@keybr/content-words";
 import { catchError } from "@keybr/debug";

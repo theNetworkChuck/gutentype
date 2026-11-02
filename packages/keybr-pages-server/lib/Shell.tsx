@@ -131,7 +131,9 @@ function Head({
     <head>
       <meta charSet="UTF-8" />
       <meta name="version" content={gitSha} />
-      <title>{formatMessage(page.title).replace(/keybr\.com/gi, siteName)}</title>
+      <title>
+        {formatMessage(page.title).replace(/keybr\.com/gi, siteName)}
+      </title>
       <StylesheetAssets entrypoint="browser" />
       <FavIconAssets links={favIcons} />
       <AltLangLinks page={page} />

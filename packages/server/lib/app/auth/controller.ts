@@ -14,7 +14,6 @@ import {
 import { inject, injectable } from "@fastr/invert";
 import { type RouterState } from "@fastr/middleware-router";
 import { randomString, type SessionState } from "@fastr/middleware-session";
-// eslint-disable-next-line n/no-extraneous-import -- Gutentype: the dependency line is the integrator's.
 import * as gt from "@gutentype/server";
 import { DataDir } from "@keybr/config";
 import { User } from "@keybr/database";

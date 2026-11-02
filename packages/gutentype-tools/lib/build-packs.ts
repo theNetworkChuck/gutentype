@@ -30,25 +30,86 @@ type Source = {
 };
 
 const BOOK_NAMES = [
-  "Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy", "Joshua", "Judges", "Ruth", "1 Samuel",
-  "2 Samuel", "1 Kings", "2 Kings", "1 Chronicles", "2 Chronicles", "Ezra", "Nehemiah", "Esther", "Job",
-  "Psalms", "Proverbs", "Ecclesiastes", "Song of Solomon", "Isaiah", "Jeremiah", "Lamentations", "Ezekiel",
-  "Daniel", "Hosea", "Joel", "Amos", "Obadiah", "Jonah", "Micah", "Nahum", "Habakkuk", "Zephaniah",
-  "Haggai", "Zechariah", "Malachi", "Matthew", "Mark", "Luke", "John", "Acts", "Romans", "1 Corinthians",
-  "2 Corinthians", "Galatians", "Ephesians", "Philippians", "Colossians", "1 Thessalonians",
-  "2 Thessalonians", "1 Timothy", "2 Timothy", "Titus", "Philemon", "Hebrews", "James", "1 Peter",
-  "2 Peter", "1 John", "2 John", "3 John", "Jude", "Revelation",
+  "Genesis",
+  "Exodus",
+  "Leviticus",
+  "Numbers",
+  "Deuteronomy",
+  "Joshua",
+  "Judges",
+  "Ruth",
+  "1 Samuel",
+  "2 Samuel",
+  "1 Kings",
+  "2 Kings",
+  "1 Chronicles",
+  "2 Chronicles",
+  "Ezra",
+  "Nehemiah",
+  "Esther",
+  "Job",
+  "Psalms",
+  "Proverbs",
+  "Ecclesiastes",
+  "Song of Solomon",
+  "Isaiah",
+  "Jeremiah",
+  "Lamentations",
+  "Ezekiel",
+  "Daniel",
+  "Hosea",
+  "Joel",
+  "Amos",
+  "Obadiah",
+  "Jonah",
+  "Micah",
+  "Nahum",
+  "Habakkuk",
+  "Zephaniah",
+  "Haggai",
+  "Zechariah",
+  "Malachi",
+  "Matthew",
+  "Mark",
+  "Luke",
+  "John",
+  "Acts",
+  "Romans",
+  "1 Corinthians",
+  "2 Corinthians",
+  "Galatians",
+  "Ephesians",
+  "Philippians",
+  "Colossians",
+  "1 Thessalonians",
+  "2 Thessalonians",
+  "1 Timothy",
+  "2 Timothy",
+  "Titus",
+  "Philemon",
+  "Hebrews",
+  "James",
+  "1 Peter",
+  "2 Peter",
+  "1 John",
+  "2 John",
+  "3 John",
+  "Jude",
+  "Revelation",
 ];
 
 export const bookId = (name: string) => name.toLowerCase().replace(/ /g, "-");
 
 function clean(text: string): string {
-  return text.replace(/^﻿/, "").replace(/\r\n?/g, "\n");
+  return text.replace(/^\uFEFF/, "").replace(/\r\n?/g, "\n");
 }
 
 function parseBsb(text: string): Book[] {
   const books = new Map<string, Book>();
-  const lines = clean(text).split("\n").slice(3).filter((l) => l.length > 0);
+  const lines = clean(text)
+    .split("\n")
+    .slice(3)
+    .filter((l) => l.length > 0);
   for (const line of lines) {
     const m = /^(.+) (\d+):(\d+)\t(.*)$/.exec(line);
     if (!m) throw new Error(`bsb: bad line ${JSON.stringify(line)}`);
@@ -90,19 +151,26 @@ function parseKjv(text: string): Book[] {
       next++;
       continue;
     }
-    if (bodies.length === 0 || l === "" || /^The (Old|New) Testament/.test(l)) continue;
+    if (bodies.length === 0 || l === "" || /^The (Old|New) Testament/.test(l))
+      continue;
     bodies[bodies.length - 1].push(l);
   }
   if (bodies.length !== 66) throw new Error(`kjv: ${bodies.length} books`);
   return bodies.map((ls, n) => {
-    const book: Book = { id: bookId(BOOK_NAMES[n]), name: BOOK_NAMES[n], chapters: [] };
+    const book: Book = {
+      id: bookId(BOOK_NAMES[n]),
+      name: BOOK_NAMES[n],
+      chapters: [],
+    };
     const text = " " + ls.join(" ");
     const marker = /\s(\d+):(\d+)\s/g;
     const hits = [...text.matchAll(marker)];
     hits.forEach((m, k) => {
       const from = m.index! + m[0].length;
       const to = k + 1 < hits.length ? hits[k + 1].index! : text.length;
-      (book.chapters[Number(m[1]) - 1] ??= [])[Number(m[2]) - 1] = text.slice(from, to).trim();
+      (book.chapters[Number(m[1]) - 1] ??= [])[Number(m[2]) - 1] = text
+        .slice(from, to)
+        .trim();
     });
     return book;
   });
@@ -145,10 +213,12 @@ function build(sourcesDir: string, outRoot: string) {
   for (const src of SOURCES) {
     const raw = readFileSync(join(sourcesDir, src.file));
     const sha = createHash("sha256").update(raw).digest("hex");
-    if (sha !== src.sha256) throw new Error(`${src.id}: sha256 ${sha} != pinned ${src.sha256}`);
+    if (sha !== src.sha256)
+      throw new Error(`${src.id}: sha256 ${sha} != pinned ${src.sha256}`);
     const books = src.parse(raw.toString("utf8"));
     const names = books.map((b) => b.name);
-    if (names.join("|") !== BOOK_NAMES.join("|")) throw new Error(`${src.id}: book order differs`);
+    if (names.join("|") !== BOOK_NAMES.join("|"))
+      throw new Error(`${src.id}: book order differs`);
 
     const dir = join(outRoot, src.id);
     rmSync(dir, { recursive: true, force: true });
@@ -161,21 +231,35 @@ function build(sourcesDir: string, outRoot: string) {
     for (const book of books) {
       for (let c = 0; c < book.chapters.length; c++) {
         const chapter = book.chapters[c];
-        if (!chapter) throw new Error(`${src.id}: ${book.name} missing chapter ${c + 1}`);
+        if (!chapter)
+          throw new Error(`${src.id}: ${book.name} missing chapter ${c + 1}`);
         for (let v = 0; v < chapter.length; v++) {
           const verse = chapter[v];
-          if (verse === undefined) throw new Error(`${src.id}: ${book.name} ${c + 1}:${v + 1} missing`);
+          if (verse === undefined)
+            throw new Error(
+              `${src.id}: ${book.name} ${c + 1}:${v + 1} missing`,
+            );
           verses++;
           if (verse === "") omitted.push(`${book.id} ${c + 1}:${v + 1}`);
           for (const w of wordsOf(verse)) {
             wordCount.set(w, (wordCount.get(w) ?? 0) + 1);
-            for (const ch of w) letterCount.set(ch, (letterCount.get(ch) ?? 0) + 1);
+            for (const ch of w)
+              letterCount.set(ch, (letterCount.get(ch) ?? 0) + 1);
           }
         }
       }
-      writeFileSync(join(dir, "books", `${book.id}.json`), JSON.stringify({ id: book.id, name: book.name, chapters: book.chapters }));
+      writeFileSync(
+        join(dir, "books", `${book.id}.json`),
+        JSON.stringify({
+          id: book.id,
+          name: book.name,
+          chapters: book.chapters,
+        }),
+      );
     }
-    const words = [...wordCount].sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : 1));
+    const words = [...wordCount].sort(
+      (a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : 1),
+    );
     const letters = [...letterCount].sort((a, b) => b[1] - a[1]);
     const pack = {
       id: src.id,
@@ -188,13 +272,25 @@ function build(sourcesDir: string, outRoot: string) {
       verses,
       omitted,
       letters: letters.map(([ch, n]) => [ch, n]),
-      books: books.map((b) => ({ id: b.id, name: b.name, chapters: b.chapters.map((ch) => ch.length) })),
+      books: books.map((b) => ({
+        id: b.id,
+        name: b.name,
+        chapters: b.chapters.map((ch) => ch.length),
+      })),
     };
     writeFileSync(join(dir, "pack.json"), JSON.stringify(pack, null, 1));
     writeFileSync(join(dir, "words.json"), JSON.stringify(words));
     // Placeholder; build-learn.ts derives the real fragments, blocklist and divine names from this pack.
-    writeFileSync(join(dir, "learn.json"), JSON.stringify({ fragments: [], blocklist: [], divineNames: [] }));
-    summary[src.id] = { verses, omitted: omitted.length, distinctWords: words.length, order: letters.map((l) => l[0]).join("") };
+    writeFileSync(
+      join(dir, "learn.json"),
+      JSON.stringify({ fragments: [], blocklist: [], divineNames: [] }),
+    );
+    summary[src.id] = {
+      verses,
+      omitted: omitted.length,
+      distinctWords: words.length,
+      order: letters.map((l) => l[0]).join(""),
+    };
   }
   return summary;
 }
@@ -203,7 +299,10 @@ function build(sourcesDir: string, outRoot: string) {
 function writeGenerated(contentLib: string, ids: string[]) {
   const lines: string[] = [
     "// Generated by packages/gutentype-tools/lib/build-packs.ts. Do not edit.",
-    ...ids.map((id) => `import ${id} from "./packs/${id}/pack.json" with { type: "json" };`),
+    ...ids.map(
+      (id) =>
+        `import ${id} from "./packs/${id}/pack.json" with { type: "json" };`,
+    ),
     "",
     "export const packInfos = [" + ids.join(", ") + "];",
     "",
@@ -213,23 +312,47 @@ function writeGenerated(contentLib: string, ids: string[]) {
   for (const id of ids) {
     for (const name of BOOK_NAMES) {
       const b = bookId(name);
-      lines.push(`    case "${id}/${b}":`, `      return (await import(/* webpackChunkName: "gt-${id}-${b}" */ "./packs/${id}/books/${b}.json", { with: { type: "json" } })).default;`);
+      lines.push(
+        `    case "${id}/${b}":`,
+        `      return (await import(/* webpackChunkName: "gt-${id}-${b}" */ "./packs/${id}/books/${b}.json", { with: { type: "json" } })).default;`,
+      );
     }
   }
-  lines.push("  }", "  throw new Error(`unknown book ${pack}/${book}`);", "}", "");
+  lines.push(
+    "  }",
+    "  throw new Error(`unknown book ${pack}/${book}`);",
+    "}",
+    "",
+  );
   for (const kind of ["words", "learn"]) {
     const fn = kind === "words" ? "importWords" : "importLearn";
-    lines.push(`export async function ${fn}(pack: string): Promise<unknown> {`, "  switch (pack) {");
-    for (const id of ids) lines.push(`    case "${id}":`, `      return (await import(/* webpackChunkName: "gt-${id}-${kind}" */ "./packs/${id}/${kind}.json", { with: { type: "json" } })).default;`);
+    lines.push(
+      `export async function ${fn}(pack: string): Promise<unknown> {`,
+      "  switch (pack) {",
+    );
+    for (const id of ids)
+      lines.push(
+        `    case "${id}":`,
+        `      return (await import(/* webpackChunkName: "gt-${id}-${kind}" */ "./packs/${id}/${kind}.json", { with: { type: "json" } })).default;`,
+      );
     lines.push("  }", "  throw new Error(`unknown pack ${pack}`);", "}", "");
   }
   writeFileSync(join(contentLib, "generated.ts"), lines.join("\n"));
 }
 
 if (import.meta.main) {
-  const sourcesDir = resolve(process.argv[2] ?? join(dirname(new URL(import.meta.url).pathname), "../sources"));
-  const contentLib = resolve(dirname(new URL(import.meta.url).pathname), "../../gutentype-content/lib");
+  const sourcesDir = resolve(
+    process.argv[2] ??
+      join(dirname(new URL(import.meta.url).pathname), "../sources"),
+  );
+  const contentLib = resolve(
+    dirname(new URL(import.meta.url).pathname),
+    "../../gutentype-content/lib",
+  );
   const summary = build(sourcesDir, join(contentLib, "packs"));
-  writeGenerated(contentLib, SOURCES.map((s) => s.id));
+  writeGenerated(
+    contentLib,
+    SOURCES.map((s) => s.id),
+  );
   console.log(JSON.stringify(summary, null, 1));
 }

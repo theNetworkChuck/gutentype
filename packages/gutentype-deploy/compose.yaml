@@ -19,5 +19,11 @@ services:
     ports:
       - "127.0.0.1:3000:3000"
     restart: unless-stopped
+    # The error log can hold network and email addresses (/privacy, Server logs); keep it small.
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
 volumes:
   gutentype-data:

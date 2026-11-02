@@ -1,7 +1,6 @@
 import { allToRoutes } from "@fastr/controller";
 import { compose, type Middleware } from "@fastr/core";
 import { Router } from "@fastr/middleware-router";
-// eslint-disable-next-line n/no-extraneous-import -- Gutentype: the dependency line is the integrator's.
 import { gutentypeGate, gutentypeRoutes } from "@gutentype/server";
 import { Controller as AuthController } from "./auth/index.ts";
 import { Controller as GameController } from "./game/index.ts";

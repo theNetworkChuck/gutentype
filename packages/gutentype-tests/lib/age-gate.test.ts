@@ -10,16 +10,13 @@ import { Application } from "@fastr/core";
 import { type Binder, inject, type Module, provides } from "@fastr/invert";
 import { privacyCopy } from "@gutentype/content";
 import { User, UserLoginRequest } from "@keybr/database";
-/* eslint-disable n/no-extraneous-import -- dependency line listed for the integrator */
 import {
   AbstractAdapter,
   AccessToken,
   type ClientConfig,
   type ResourceOwner,
 } from "@keybr/oauth";
-/* eslint-disable n/no-extraneous-import */
 import { AdapterFactory } from "@keybr/server/lib/app/auth/module.ts";
-/* eslint-enable n/no-extraneous-import */
 import { Model } from "objection";
 import {
   adultSignIn,

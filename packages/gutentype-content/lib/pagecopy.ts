@@ -10,13 +10,16 @@ export type CopySection = {
 };
 
 /** `/privacy` (ISC-41, ISC-64, ISC-57, ISC-65): what is stored, where, and for how long. */
-export const privacyCopy: { readonly title: string; readonly sections: readonly CopySection[] } = {
+export const privacyCopy: {
+  readonly title: string;
+  readonly sections: readonly CopySection[];
+} = {
   title: "Privacy",
   sections: [
     {
       heading: "If you never sign in",
       paragraphs: [
-        "Nothing about you is stored on our server. Your lesson results, your settings and the verses you have typed stay in this browser (local storage and IndexedDB) until you clear them.",
+        "Nothing about you is stored on our server, apart from the error log described below. Your lesson results, your settings and the verses you have typed stay in this browser (local storage and IndexedDB) until you clear them.",
         "A cookie named prefs remembers your color theme. It holds no identifier.",
         "When you finish a book, and when you pass your tenth Learn lesson, the browser sends one anonymous count to our server. The request carries only the counter's name: no cookie, no id, nothing else. We keep a daily total per counter and do not record the address it came from. These two totals are the only thing that leaves a signed-out browser.",
       ],
@@ -28,6 +31,12 @@ export const privacyCopy: { readonly title: string; readonly sections: readonly 
         "On our server we keep: your account (email, a display name, the date you joined, and whether you chose to stay anonymous); if you use Google, the Google account id, name, profile link and picture link Google sends us; pending sign-in links (deleted after 15 minutes or on use); your settings and lesson statistics; your reading progress per verse (speed and accuracy); and a session file that keeps you signed in for 14 days.",
         "To stop abuse of sign-in emails we keep a salted hash of the email address and of the network address for one hour after each sign-in request. A table left from Keybr's paid tier (orders) exists but is always empty: there is nothing to buy.",
         "Sign-in emails are sent by our email provider, which sees your address to deliver the message.",
+      ],
+    },
+    {
+      heading: "Server logs",
+      paragraphs: [
+        "When the server hits an error, its log records that request, including your network address. If a sign-in email fails to send, the log records the address it was for. We read the log only to fix faults. It is capped in size, and its oldest lines are deleted as new ones arrive.",
       ],
     },
     {

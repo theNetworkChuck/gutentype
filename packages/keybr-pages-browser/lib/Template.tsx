@@ -1,4 +1,3 @@
-// eslint-disable-next-line n/no-extraneous-import -- the "@gutentype/pages" dependency line is the integrator's (CONTRACTS)
 import { GutentypeFooter, GutentypeNav } from "@gutentype/pages";
 import { PortalContainer, Toaster } from "@keybr/widget";
 import { type ReactNode } from "react";

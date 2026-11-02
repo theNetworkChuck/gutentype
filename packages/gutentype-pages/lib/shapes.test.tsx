@@ -6,11 +6,8 @@
  */
 import { readFileSync } from "node:fs";
 import { test } from "node:test";
-// eslint-disable-next-line n/no-extraneous-import -- devDependency line owed by the integrator (reported)
 import { KeyLegend } from "@keybr/lesson-ui";
-// eslint-disable-next-line n/no-extraneous-import -- devDependency line owed by the integrator (reported)
 import { Attr, type LineList } from "@keybr/textinput";
-// eslint-disable-next-line n/no-extraneous-import -- devDependency line owed by the integrator (reported)
 import { StaticText } from "@keybr/textinput-ui";
 import { render } from "@testing-library/react";
 import { renderToStaticMarkup } from "react-dom/server";

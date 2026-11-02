@@ -7,7 +7,6 @@ import { test } from "node:test";
 import { Application } from "@fastr/core";
 import { counterPath, countOnce } from "@gutentype/content";
 import { createGutentypeSchema } from "@gutentype/server";
-// eslint-disable-next-line n/no-extraneous-import -- dependency line listed for the integrator
 import { Level, Logger, type Message } from "@keybr/logger";
 import { Model } from "objection";
 import { kMain, startApp, TestContext } from "./server-harness.ts";
