@@ -14,25 +14,19 @@ import {
 import { inject, injectable } from "@fastr/invert";
 import { type RouterState } from "@fastr/middleware-router";
 import { randomString, type SessionState } from "@fastr/middleware-session";
-import { User, UserLoginRequest } from "@keybr/database";
+// eslint-disable-next-line n/no-extraneous-import -- Gutentype: the dependency line is the integrator's.
+import * as gt from "@gutentype/server";
+import { DataDir } from "@keybr/config";
+import { User } from "@keybr/database";
 import { Logger } from "@keybr/logger";
 import { type AbstractAdapter } from "@keybr/oauth";
 import { z } from "zod";
 import { Mailer } from "../mail/index.ts";
-import { messageWithLink } from "./email.ts";
 import { pAdapter } from "./pipe.ts";
 import { type AuthState } from "./types.ts";
 import { zod } from "./zod.ts";
 
 const jsonOpts = { maxLength: 4096 };
-
-const TCreateToken = z.object({
-  email: z.string().min(1).email(),
-});
-type TCreateToken = z.infer<typeof TCreateToken>;
-const PCreateToken = zod(TCreateToken, () => {
-  throw new ApplicationError("Invalid e-mail address");
-});
 
 const TPatchAccount = z.object({
   anonymized: z.boolean(),
@@ -48,16 +42,21 @@ export class Controller {
   constructor(
     @inject("canonicalUrl") readonly canonicalUrl: string,
     readonly mailer: Mailer,
+    readonly dataDir: DataDir, // Gutentype
   ) {}
 
   @http.GET({ name: "oauth-init", path: "/auth/oauth-init/{adapter}" })
   async oAuthInit(
     ctx: Context<RouterState & SessionState & AuthState>,
     @pathParam("adapter", pAdapter) adapter: AbstractAdapter,
+    @queryParam("birthYear") birthYear: string | null, // Gutentype (ISC-57)
+    @queryParam("consent") consent: string | null, // Gutentype (ISC-57)
   ) {
+    const answers = gt.parseOAuthAnswers(birthYear, consent); // Gutentype: 400 for under-13s, before any cookie.
     const state = randomString(20);
     ctx.state.session.start();
     ctx.state.session.set("authState", state);
+    if (answers != null) ctx.state.session.set("gutentypeAdult", true); // Gutentype
     ctx.response.redirect(adapter.getAuthorizationUrl({ state }));
   }
 
@@ -69,11 +68,16 @@ export class Controller {
     @queryParam("state", zod(z.string().min(1))) state: string,
   ) {
     const authState = ctx.state.session.pull("authState");
+    const adult = ctx.state.session.pull("gutentypeAdult") === true; // Gutentype
     ctx.state.session.destroy();
     if (state === authState) {
       const token = await adapter.getAccessToken({ code });
       const resourceOwner = await adapter.getProfile(token);
       if (resourceOwner.email != null) {
+        // Gutentype (ISC-57): no new account without the birth year and consent answered at oauth-init.
+        if (!adult && (await User.findByEmail(resourceOwner.email)) == null) {
+          throw new ForbiddenError("Sign-in needs your birth year and consent");
+        }
         const user = await User.ensure(resourceOwner);
         ctx.state.session.start();
         ctx.state.session.set("userId", user.id!);
@@ -87,14 +91,17 @@ export class Controller {
   @http.POST({ name: "create-token", path: "/auth/login/register-email" })
   async createToken(
     ctx: Context<RouterState & SessionState & AuthState>,
-    @body.json(PCreateToken, jsonOpts) { email }: TCreateToken,
+    @body.json(null, jsonOpts) value: unknown,
   ) {
-    const token = String(await UserLoginRequest.init(email));
+    // Gutentype: birth year and consent first (ISC-57), then the rate limits (ISC-58), then a fresh random token.
+    const { email } = gt.parseSignIn(value);
+    await gt.checkSignInRate(this.dataDir, email, gt.clientAddress(ctx));
+    const token = await gt.createLoginToken(email);
     const link = String(
       new URL(ctx.state.router.makePath("login", { token }), this.canonicalUrl),
     );
     try {
-      await this.mailer.sendMail(messageWithLink({ email, link }));
+      await this.mailer.sendMail(gt.signInMessage({ email, link }));
     } catch (err: any) {
       Logger.warn(err, "Error sending e-mail message to '%s'", email);
       throw new ApplicationError("Error sending e-mail message");
@@ -102,24 +109,33 @@ export class Controller {
     ctx.response.body = { email };
   }
 
+  // Gutentype (ISC-67): GET only shows a button, so a mail scanner cannot use the link up; POST signs in, once.
   @http.GET({ name: "login", path: "/login/{token}" })
   async loginWithToken(
     ctx: Context<RouterState & SessionState & AuthState>,
     @pathParam("token", zod(z.string().min(1))) token: string,
   ) {
+    ctx.response.type = "text/html";
+    ctx.response.headers.set("Cache-Control", "no-store");
+    ctx.response.body = gt.renderSignInConfirm(token);
+  }
+
+  @http.POST({ name: "login-confirm", path: "/login/{token}" })
+  async confirmLogin(
+    ctx: Context<RouterState & SessionState & AuthState>,
+    @pathParam("token", zod(z.string().min(1))) token: string,
+  ) {
     ctx.state.session.destroy();
-    const user = await UserLoginRequest.login(token);
+    const user = await gt.consumeLoginToken(token);
     if (user != null) {
       ctx.state.session.start();
       ctx.state.session.set("userId", user.id!);
-      ctx.response.redirect("/account");
+      ctx.response.redirect("/account", 303);
     } else {
-      throw new ForbiddenError("Invalid login link", {
+      throw new ForbiddenError("Invalid sign-in link", {
         description:
-          "The login link that you are currently using is either expired or invalid. " +
-          "Please enter your e-mail address again to receive a new login link. " +
-          "Don’t worry, your account is safe! " +
-          "You likely got here because you used an old link that does not work anymore.",
+          "This sign-in link was already used or is more than 15 minutes old. " +
+          "Enter your email again to get a new link.",
       });
     }
   }
@@ -150,7 +166,7 @@ export class Controller {
   @http.DELETE({ name: "delete-account", path: "/_/account" })
   async deleteAccount(ctx: Context<RouterState & SessionState & AuthState>) {
     const user = ctx.state.requireUser();
-    await user.$query().delete();
+    await gt.purgeUser(this.dataDir, user); // Gutentype (ISC-24): every row and per-user file.
     ctx.state.session.destroy();
     ctx.response.status = 204;
   }
