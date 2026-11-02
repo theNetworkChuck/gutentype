@@ -19,7 +19,12 @@ COPY . .
 RUN bun install --frozen-lockfile
 ARG GIT_SHA=dev
 ENV GIT_SHA=${GIT_SHA}
-RUN bun run compile && bun run build
+# lage hashes the file list with git even with --no-cache, and the build context leaves .git out on purpose. The
+# build stage makes a throwaway one-commit repo of exactly what it was given and deletes it after the build, so the
+# final image carries no .git.
+RUN git init -q && git add -A && git -c user.name=build -c user.email=build@localhost commit -qm build \
+  && bun run compile && bun run build \
+  && rm -rf .git
 
 FROM node:26
 WORKDIR /usr/src/app
