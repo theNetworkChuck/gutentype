@@ -8,7 +8,7 @@ import * as styles from "./pages.module.less";
  */
 export function DonatePage() {
   return (
-    <article className={styles.page}>
+    <article className={styles.page} data-gt="page">
       <h1 className={styles.title}>{donateCopy.title}</h1>
       {donateCopy.paragraphs.map((text) => (
         <p key={text}>{text}</p>

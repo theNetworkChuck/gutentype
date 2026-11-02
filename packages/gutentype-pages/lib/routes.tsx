@@ -7,8 +7,9 @@ import {
 } from "@gutentype/read";
 import { LoadingProgress, type PageInfo } from "@keybr/pages-shared";
 import { type ComponentType, type ReactNode, Suspense } from "react";
-import { Route } from "react-router";
+import { Navigate, Route } from "react-router";
 import { DonatePage } from "./pages/DonatePage.tsx";
+import { HelpPage } from "./pages/HelpPage.tsx";
 import { NotFoundPage } from "./pages/NotFoundPage.tsx";
 import { PrivacyPage } from "./pages/PrivacyPage.tsx";
 import { TranslationsPage } from "./pages/TranslationsPage.tsx";
@@ -72,6 +73,11 @@ export const gutentypeRouteTable: readonly GutentypeRoute[] = [
     page: page(GutentypePaths.donate, "donate", "Donate"),
     element: () => <DonatePage />,
   },
+  {
+    path: GutentypePaths.help,
+    page: page(GutentypePaths.help, "help", "Help"),
+    element: () => <HelpPage />,
+  },
 ];
 
 /** Gutentype paths App.tsx serves through its own Keybr routes: `/` is GutentypeHome, `/account` the Gutentype account page. */
@@ -79,6 +85,9 @@ export const appOwnedPaths: readonly string[] = [
   GutentypePaths.home,
   GutentypePaths.account,
 ];
+
+/** Gutentype paths that only redirect: `/learn` goes to `/`, where Learn lives. */
+export const redirectPaths: readonly string[] = [GutentypePaths.learn];
 
 /** Gutentype paths only the server answers (the share card's PNG). */
 export const serverOnlyPaths: readonly string[] = [GutentypePaths.sharePng];
@@ -125,6 +134,11 @@ export function gutentypeRoutes(
           }
         />
       ))}
+      <Route
+        key={GutentypePaths.learn}
+        path={GutentypePaths.learn}
+        element={<Navigate to={GutentypePaths.home} replace={true} />}
+      />
       {switchedOffPaths.map((path) => (
         <Route
           key={path}

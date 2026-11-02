@@ -29,7 +29,7 @@ export function AccountView({
 }) {
   const { user } = usePageData();
   return (
-    <article className={styles.page}>
+    <article className={styles.page} data-gt="page">
       <h1 className={styles.title}>Account</h1>
       {user != null ? (
         <SignedIn user={user} service={service} />

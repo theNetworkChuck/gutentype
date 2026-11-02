@@ -28,8 +28,17 @@ function setWidth(width: number) {
   });
 }
 
+function setScreenWidth(width: number | undefined) {
+  Object.defineProperty(window, "screen", {
+    configurable: true,
+    writable: true,
+    value: width == null ? undefined : { width },
+  });
+}
+
 afterEach(() => {
   setWidth(1024);
+  setScreenWidth(undefined);
 });
 
 test("the homepage line names the Bible and the active translation, then one button to typing", async () => {
@@ -150,4 +159,23 @@ test("an account that already has many results does not count again", () => {
   } finally {
     globalThis.fetch = realFetch;
   }
+});
+
+// Browser check (2026-11-02): before the viewport meta applies, a phone reports the 980px default layout width
+// (traced in Chrome: innerWidth 980 at document start, 390 by DOMContentLoaded), so an innerWidth check alone can
+// keep a phone on Learn. The screen width settles it.
+test("a phone that still reports the 980px default layout width goes to Read", async () => {
+  setWidth(980);
+  setScreenWidth(390);
+  const r = render(
+    <TestProviders>
+      <Routes>
+        <Route path="/" element={<HomeView practice={<PracticeProbe />} />} />
+        <Route path="/read" element={<p>Read index</p>} />
+      </Routes>
+    </TestProviders>,
+  );
+  await act(async () => {});
+  isNotNull(r.queryByText("Read index"));
+  r.unmount();
 });

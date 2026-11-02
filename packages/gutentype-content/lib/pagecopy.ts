@@ -60,6 +60,51 @@ export const privacyCopy: {
   ],
 };
 
+/**
+ * `/help`: how Learn and Read work. Replaces Keybr's help, which explains made-up practice words (Gutentype's are
+ * all real words) and keybr.com's features. Plain product copy (ISC-46).
+ */
+export const helpCopy: {
+  readonly title: string;
+  readonly sections: readonly CopySection[];
+} = {
+  title: "Help",
+  sections: [
+    {
+      heading: "Learn",
+      paragraphs: [
+        "Learn teaches touch typing with Keybr's adaptive lessons. You start with six letters. When every letter in play reaches your target speed, the next letter unlocks, and the lesson focuses on the letter you are slowest at.",
+        "Every word in a lesson is a real word from the translation you picked, and each lesson includes a short run of words taken straight from a verse.",
+      ],
+    },
+    {
+      heading: "Read",
+      paragraphs: [
+        "Read is for typing the Bible itself, verse by verse. Pick a book and a chapter, then click the verse or press Enter and start typing. There is no timer.",
+        "Each verse records its speed and accuracy when you finish it, and the page remembers where you stopped. Finish a book to get a card you can download or share.",
+      ],
+    },
+    {
+      heading: "Quotes and dashes",
+      paragraphs: [
+        "Verses keep the punctuation of their source. Type a plain ' or \" for curly quotes and a plain - for any dash.",
+      ],
+    },
+    {
+      heading: "Speed and accuracy",
+      paragraphs: [
+        "Speed is words per minute, counting five characters as one word. Accuracy is the share of keys you typed right the first time.",
+      ],
+    },
+    {
+      heading: "Your progress",
+      paragraphs: [
+        "Without an account, your progress stays in this browser. Signing in carries it to your other devices. The Privacy page says exactly what is stored.",
+      ],
+    },
+  ],
+};
+
 /** `/translations` (ISC-28): every installed pack with its license and source. */
 export const translationsCopy = () => ({
   title: "Translations",

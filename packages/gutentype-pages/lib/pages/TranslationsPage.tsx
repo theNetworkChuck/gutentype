@@ -14,7 +14,7 @@ export function TranslationsPage() {
   const active = activePack(settings);
   const copy = translationsCopy();
   return (
-    <article className={styles.page}>
+    <article className={styles.page} data-gt="page">
       <h1 className={styles.title}>{copy.title}</h1>
       <p>{copy.intro}</p>
       <ul className={styles.packs} aria-label="Packs">

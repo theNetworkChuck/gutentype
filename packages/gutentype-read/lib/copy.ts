@@ -13,6 +13,8 @@ export const readCopy = {
   chaptersLabel: "Chapters",
   versesLabel: "Verses",
   allBooks: "All books",
+  punctuationHint:
+    "Type a plain ' or \" for curly quotes and a plain - for any dash.",
   continueAt: (book: string, chapter: number, verse: number) =>
     `Continue at ${book} ${chapter}:${verse}`,
   startAt: (book: string) => `Start ${book}`,

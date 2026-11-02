@@ -8,6 +8,7 @@ import { flaggedRoutes, GutentypePaths } from "@gutentype/content";
 import {
   appOwnedPaths,
   gutentypeRouteTable,
+  redirectPaths,
   serverOnlyPaths,
   switchedOffPaths,
 } from "@gutentype/pages";
@@ -18,6 +19,7 @@ test("every Gutentype path has exactly one owner", () => {
     ...gutentypeRouteTable.map(({ path }) => path),
     ...appOwnedPaths,
     ...serverOnlyPaths,
+    ...redirectPaths,
   ];
   equal(new Set(owned).size, owned.length, "no path is owned twice");
   deepEqual(

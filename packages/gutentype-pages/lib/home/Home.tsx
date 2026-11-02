@@ -14,7 +14,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { Navigate, useLocation } from "react-router";
+import { Link, Navigate, useLocation } from "react-router";
 import { focusPracticeText, isPhoneWidth, withoutTour } from "./helpers.ts";
 import * as styles from "./Home.module.less";
 
@@ -32,7 +32,10 @@ export function HomeView({ practice }: { readonly practice: ReactNode }) {
     () =>
       location.key === "default" &&
       typeof window !== "undefined" &&
-      isPhoneWidth(window.innerWidth),
+      // The screen width too (0 means unknown): before the viewport meta applies a phone reports 980px.
+      isPhoneWidth(
+        Math.min(window.innerWidth, window.screen?.width || Infinity),
+      ),
   );
   const practiceRef = useRef<HTMLDivElement>(null);
 
@@ -64,6 +67,10 @@ export function HomeView({ practice }: { readonly practice: ReactNode }) {
         >
           Start typing
         </button>
+        <p className={styles.phoneNote} data-gt="phone-note">
+          Learn is made for a physical keyboard. On a phone,{" "}
+          <Link to={GutentypePaths.read}>Read</Link> works best.
+        </p>
       </div>
       <div ref={practiceRef} data-gt="practice">
         {settings.isNew ? null : (

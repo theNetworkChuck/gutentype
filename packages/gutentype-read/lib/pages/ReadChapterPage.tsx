@@ -265,6 +265,7 @@ export function Chapter({
             value={readCopy.versesTyped(progress.typed, progress.total)}
           />
         </Stats>
+        <p className={styles.hint}>{readCopy.punctuationHint}</p>
         {active == null && (
           <div className={styles.notice} role="status">
             <Mark

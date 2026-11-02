@@ -111,12 +111,12 @@ export class ScriptureLesson extends GuidedLesson {
   /**
    * ISC-71: how likely a drill word is to be picked. Keybr samples its everyday-English dictionary uniformly; a
    * pack's list holds every word of the Bible, names included, and the early stages have few words, so uniform
-   * picks fill a lesson with rare names. Weight by log2(count + 1), and a name counts a fifth. Names stay in play,
+   * picks fill a lesson with rare names. Weight by log2(count + 1), and a name counts a twentieth. Names stay in play,
    * so the stage floor (ISC-9) is unchanged.
    */
   readonly #wordWeight = (word: string): number =>
     Math.log2((this.corpus.wordCounts.get(word) ?? 1) + 1) *
-    (this.corpus.names.has(word) ? 0.2 : 1);
+    (this.corpus.names.has(word) ? 0.05 : 1);
 
   /** Pack words that use only the included letters, the focused letter first, as Keybr's natural-words branch picks them. */
   #drillWords(

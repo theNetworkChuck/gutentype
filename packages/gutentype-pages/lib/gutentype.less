@@ -33,8 +33,10 @@
 /* Phones: one column, nav on top, footer last (CONTRACTS § 7). */
 @media (max-width: 40rem) {
   /* Keybr sizes the root font for desktops (8px under 1280px), which leaves verse text near 9px on a phone.
-     Phones read and type verses here (ISC-43, ISC-61), so the root goes to 14px; :root outranks Keybr's html rule. */
-  :root {
+     Read and Gutentype's own pages go to 14px (ISC-72); :root outranks Keybr's html rule. Keybr's screens
+     (practice, layouts, profile) keep Keybr's sizing: they are laid out for it and overflow when it grows
+     (acceptance, 2026-11-02). */
+  :root:has([data-gt="read"], [data-gt="page"]) {
     font-size: 14px;
   }
 

@@ -14,7 +14,7 @@ export type ScriptureCorpus = {
   readonly words: readonly string[];
   /** How often each drill word occurs in the pack; lessons pick common words more often (ISC-71). */
   readonly wordCounts: ReadonlyMap<string, number>;
-  /** Words the pack only ever capitalizes; lessons pick them a fifth as often (ISC-71). */
+  /** Words the pack only ever capitalizes; lessons pick them a twentieth as often (ISC-71). */
   readonly names: ReadonlySet<string>;
   /** Verse fragments (3 to 5 consecutive words), none holding a blocked word, none starting or ending with a divine name. */
   readonly fragments: readonly (readonly string[])[];

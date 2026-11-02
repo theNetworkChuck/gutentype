@@ -10,6 +10,9 @@ export const GutentypePaths = {
   privacy: "/privacy",
   donate: "/donate",
   account: "/account",
+  help: "/help",
+  /** Not a page: redirects to `/`, where Learn lives (acceptance, 2026-11-02). */
+  learn: "/learn",
 } as const;
 
 export const readBookPath = (book: string) => `/read/${book}`;

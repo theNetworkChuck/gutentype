@@ -5,6 +5,7 @@ import { type RouteOptions, type RouterState } from "@fastr/middleware-router";
 import {
   activePackFromJson,
   donateCopy,
+  helpCopy,
   homeLine,
   loadBook,
   type Pack,
@@ -485,6 +486,26 @@ const privacy: Page = {
   }),
 };
 
+const help: Page = {
+  path: "/help",
+  render: () => ({
+    title: helpCopy.title,
+    body: (
+      <>
+        <h1>{helpCopy.title}</h1>
+        {helpCopy.sections.map((s) => (
+          <section key={s.heading}>
+            <h2>{s.heading}</h2>
+            {s.paragraphs.map((p, i) => (
+              <p key={i}>{p}</p>
+            ))}
+          </section>
+        ))}
+      </>
+    ),
+  }),
+};
+
 const donate: Page = {
   path: "/donate",
   render: () => ({
@@ -518,6 +539,7 @@ export const gutentypePages: readonly Page[] = [
   translations,
   privacy,
   donate,
+  help,
   account,
 ];
 
@@ -554,6 +576,14 @@ export function pageRoutes(): RouteOptions[] {
       },
     });
   }
+  // Learn lives at /; a visitor who guesses /learn lands there (acceptance, 2026-11-02).
+  routes.push({
+    path: "/learn",
+    method: "GET",
+    middleware: (ctx: any) => {
+      ctx.response.redirect("/");
+    },
+  });
   routes.push({
     path: "/share.png",
     method: "GET",
